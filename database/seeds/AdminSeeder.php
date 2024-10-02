@@ -19,7 +19,7 @@ class AdminSeeder extends Seeder
             $admin->name     = "Ambaza Marcellin";
             $admin->email    = "marcellin@gmail.com";
             $admin->username = "superadmin";
-            $admin->password = Hash::make('ambazamarcellin@2001');
+            $admin->password = Hash::make('1234578');
             $admin->save();
         }
     }

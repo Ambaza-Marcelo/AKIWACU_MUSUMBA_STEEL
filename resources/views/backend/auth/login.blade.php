@@ -14,7 +14,7 @@
                     <div class="login-form-head">
                       <!--  <h4>Sign In</h4> -->
                         <p>
-                             <img src="{{ asset('img/undraw_breakfast_psiw.svg') }}" width="100">
+                             
                         </p>
                     </div>
                     <div class="login-form-body">
@@ -49,7 +49,7 @@
                                 </div>
                             </div>
                             <div class="col-6 text-right">
-                                <a href="{{ route('welcome') }}">@lang('Menu')?</a>
+                                <a href="#">@lang('Forgot password')?</a>
                             </div>
                         </div>
                         <div class="submit-btn-area">
