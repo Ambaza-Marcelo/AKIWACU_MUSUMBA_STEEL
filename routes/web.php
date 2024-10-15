@@ -31,6 +31,14 @@ Route::group(['prefix' => 'admin'], function () {
     Route::resource('users', 'Backend\UsersController', ['names' => 'admin.users']);
     Route::resource('admins', 'Backend\AdminsController', ['names' => 'admin.admins']);
 
+    //settings routes
+    Route::get('EBMS/settings/index', 'Backend\SettingController@index')->name('admin.settings.index');
+    Route::get('EBMS/settings/create', 'Backend\SettingController@create')->name('admin.settings.create');
+    Route::post('EBMS/settings/store', 'Backend\SettingController@store')->name('admin.settings.store');
+    Route::get('EBMS/settings/edit/{id}', 'Backend\SettingController@edit')->name('admin.settings.edit');
+    Route::put('EBMS/settings/update/{id}', 'Backend\SettingController@update')->name('admin.settings.update');
+    Route::delete('EBMS/settings/destroy/{id}', 'Backend\SettingController@destroy')->name('admin.settings.destroy');
+
 
      //musumba-steel-facture
     Route::get('musumba-steel-facture/index', 'Backend\MusumbaSteel\Ebp\FactureController@index')->name('admin.musumba-steel-facture.index');

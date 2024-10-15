@@ -19,35 +19,7 @@
                         <a href="{{ route('admin.dashboard') }}" aria-expanded="true"><i class="ti-dashboard"></i><span>@lang('messages.dashboard')</span></a>
                     </li>
                     @endif
-                    @if ($usr->can('admin.create') || $usr->can('admin.view') ||  $usr->can('admin.edit') ||  $usr->can('admin.delete'))
-                    <li>
-                        <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-user"></i><span>
-                            @lang('messages.users')
-                        </span></a>
-                        <ul class="collapse {{ Route::is('admin.admins.create') || Route::is('admin.admins.index') || Route::is('admin.admins.edit') || Route::is('admin.admins.show') ? 'in' : '' }}">
-                            
-                            @if ($usr->can('admin.view'))
-                                <li class="{{ Route::is('admin.admins.index')  || Route::is('admin.admins.edit') ? 'active' : '' }}"><a href="{{ route('admin.admins.index') }}"><i class="fa fa-user"></i>&nbsp;@lang('messages.users')</a></li>
-                            @endif
-                            @if ($usr->can('role.view'))
-                                <li class="{{ Route::is('admin.roles.index')  || Route::is('admin.roles.edit') ? 'active' : '' }}"><a href="{{ route('admin.roles.index') }}"><i class="fa fa-tasks"></i> &nbsp;@lang('messages.roles') & @lang('messages.permissions')</a></li>
-                            @endif
-                        </ul>
-                    </li>
-                    @endif
-                    @if($usr->can('setting.view'))
-                    <li class=""><a href="{{ route('admin.settings.index') }}"><i class="fa fa-cogs"></i><span>@lang('messages.setting')</a></li>
-                    @endif
-                    <hr>
-
                     <!-- start musumba steel menu -->
-                    @if ($usr->can('musumba_steel_facture.view'))
-                    <hr>
-                    <li>
-                        <li class="active"><a href="#"><i class="fa fa-first-order"></i>&nbsp;@lang('MUSUMBA STEEL')</a></li>
-                    </li>
-                    <hr>
-                    @endif
                     @if ( $usr->can('musumba_steel_facture.create') || $usr->can('musumba_steel_facture.view') ||  $usr->can('musumba_steel_facture.edit') ||  $usr->can('musumba_steel_facture.delete') ||  $usr->can('musumba_steel_facture.validate') ||  $usr->can('musumba_steel_facture.confirm') ||  $usr->can('musumba_steel_facture.send') ||  $usr->can('musumba_steel_facture.approuve'))
                     <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-shopping-cart"></i><span>
@@ -329,6 +301,25 @@
                             @endif
                         </ul>
                     </li>
+                    @endif
+                    @if ($usr->can('admin.create') || $usr->can('admin.view') ||  $usr->can('admin.edit') ||  $usr->can('admin.delete'))
+                    <li>
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-user"></i><span>
+                            @lang('messages.users')
+                        </span></a>
+                        <ul class="collapse {{ Route::is('admin.admins.create') || Route::is('admin.admins.index') || Route::is('admin.admins.edit') || Route::is('admin.admins.show') ? 'in' : '' }}">
+                            
+                            @if ($usr->can('admin.view'))
+                                <li class="{{ Route::is('admin.admins.index')  || Route::is('admin.admins.edit') ? 'active' : '' }}"><a href="{{ route('admin.admins.index') }}"><i class="fa fa-user"></i>&nbsp;@lang('messages.users')</a></li>
+                            @endif
+                            @if ($usr->can('role.view'))
+                                <li class="{{ Route::is('admin.roles.index')  || Route::is('admin.roles.edit') ? 'active' : '' }}"><a href="{{ route('admin.roles.index') }}"><i class="fa fa-tasks"></i> &nbsp;@lang('messages.roles') & @lang('messages.permissions')</a></li>
+                            @endif
+                        </ul>
+                    </li>
+                    @endif
+                    @if($usr->can('setting.view'))
+                    <li class=""><a href="{{ route('admin.settings.index') }}"><i class="fa fa-cogs"></i><span>@lang('messages.setting')</a></li>
                     @endif
                     <!-- end musumba steel menu -->
                 </ul>
