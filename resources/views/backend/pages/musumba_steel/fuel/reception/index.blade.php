@@ -72,7 +72,7 @@
                                     <td>{{ \Carbon\Carbon::parse($reception->date)->format('d/m/Y') }}</td>
                                     <td>{{ $reception->invoice_no }}</td>
                                     <td>@if($reception->order_no)<a href="{{ route('admin.ms-fuel-supplier-orders.show',$reception->order_no)}}">{{ $reception->order_no }}</a> @else <a href="{{ route('admin.ms-fuel-purchases.show',$reception->purchase_no)}}">{{ $reception->purchase_no }}</a> @endif</td>
-                                    <td>{{ $reception->supplier->name }}/{{ $reception->supplier->phone_no }}</td>
+                                    <td>@if($reception->supplier_id){{ $reception->supplier->name }}/{{ $reception->supplier->phone_no }}@endif</td>
                                     <td>{{ $reception->receptionist }}</td>
                                     <td>@if($reception->status == 1)<img src="{{ asset('img/warning3.gif')}}" width="35">@elseif($reception->status == 1)<span class="badge badge-info">Encours</span> @elseif($reception->status == 2)<span class="badge badge-info">Validé</span> @elseif($reception->status == 3)<span class="badge badge-info">Confirmé</span> @elseif($reception->status == 4)<span class="badge badge-info">Approuvé</span> @elseif($reception->status == -1)<span class="badge badge-danger">Rejeté</span>@endif</td>
                                     <td>{{ $reception->created_by }}</td>
@@ -107,7 +107,7 @@
                                         @if (Auth::guard('admin')->user()->can('musumba_steel_fuel_reception.approuve'))
                                         @if($reception->status == 3)
                                             <a class="btn btn-primary text-white" href="{{ route('admin.ms-fuel-receptions.approuve', $reception->reception_no) }}"
-                                            onclick="event.preventDefault(); document.getElementById('approuve-form-{{ $reception->reception_no }}').submit();">
+                                            onclick="event.preventDefault(); document.getElementById('approuve-form-{{ $reception->reception_no }}').submit();this.style.visibility='hidden';" ondblclick="this.style.visibility='hidden';">
                                                 Approuver
                                             </a>
 

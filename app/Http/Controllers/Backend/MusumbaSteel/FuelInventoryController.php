@@ -98,6 +98,8 @@ class FuelInventoryController extends Controller
                 ]);
             }
 
+            try {DB::beginTransaction();
+
             $pump_id = $request->pump_id;
             $date = $request->date;
             $jauge_id = $request->jauge_id;
@@ -177,9 +179,20 @@ class FuelInventoryController extends Controller
             $fuel_inventory->description = $description;
             $fuel_inventory->created_by = $created_by;
             $fuel_inventory->save();
+
+            DB::commit();
+            session()->flash('success', 'Inventory has been created !!');
+            return redirect()->route('admin.ms-fuel-inventories.index');
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
          
-        session()->flash('success', 'Inventory has been created !!');
-        return redirect()->route('admin.ms-fuel-inventories.index');
     }
 
     /**

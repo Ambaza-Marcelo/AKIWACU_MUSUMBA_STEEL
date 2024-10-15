@@ -89,6 +89,8 @@ class FuelRequisitionController extends Controller
                 ]);
             }
 
+            try {DB::beginTransaction();
+
             $car_id = $request->car_id;
             $fuel_id = $request->fuel_id;
             $date = $request->date;
@@ -137,8 +139,18 @@ class FuelRequisitionController extends Controller
        
         MsFuelRequisitionDetail::insert($insert_data);
 
-        session()->flash('success', 'Requisition has been created !!');
-        return redirect()->route('admin.ms-fuel-requisitions.index');
+        DB::commit();
+            session()->flash('success', 'Requisition has been created !!');
+            return redirect()->route('admin.ms-fuel-requisitions.index');
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
     }
 
     /**
@@ -252,7 +264,7 @@ class FuelRequisitionController extends Controller
 
         MsFuelRequisition::where('requisition_no', '=', $requisition_no)
                 ->update(['status' => 4,'approuved_by' => $this->user->name]);
-            MsFuelRequisitionDetail::where('requisition_no', '=', $requisition_no)
+        MsFuelRequisitionDetail::where('requisition_no', '=', $requisition_no)
                 ->update(['status' => 4,'approuved_by' => $this->user->name]);
 
         session()->flash('success', 'Requisition has been confirmed !!');

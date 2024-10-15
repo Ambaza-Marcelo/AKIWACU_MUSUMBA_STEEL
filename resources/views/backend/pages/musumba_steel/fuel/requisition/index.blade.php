@@ -79,7 +79,7 @@
                                     @elseif($requisition->status == 4)
                                     <td><span class="badge badge-success">Approuvé</span></td>
                                     @elseif($requisition->status == 5)
-                                    <td><span class="badge badge-success">Transferé</span></td>
+                                    <td><span class="badge badge-success">Sortie</span></td>
                                     @else
                                     <td><span class="badge badge-primary">Encours...</span></td>
                                     @endif

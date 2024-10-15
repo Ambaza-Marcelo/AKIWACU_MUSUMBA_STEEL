@@ -89,6 +89,8 @@ class MaterialPurchaseController extends Controller
                 ]);
             }
 
+            try {DB::beginTransaction();
+
             $material_id = $request->material_id;
             $date = $request->date;
             $quantity = $request->quantity;
@@ -134,8 +136,19 @@ class MaterialPurchaseController extends Controller
 
             MsMaterialPurchaseDetail::insert($insert_data);
 
-        session()->flash('success', 'Material has been created !!');
-        return redirect()->route('admin.ms-material-purchases.index');
+            DB::commit();
+            session()->flash('success', 'Material has been created !!');
+            return redirect()->route('admin.ms-material-purchases.index');
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
+
     }
 
     /**

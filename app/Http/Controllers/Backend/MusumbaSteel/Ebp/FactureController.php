@@ -100,6 +100,8 @@ class FactureController extends Controller
                 ]);
             }
 
+            try {DB::beginTransaction();
+
             $article_id = $request->article_id;
             $item_quantity = $request->item_quantity;
             $item_price = $request->item_price;
@@ -225,8 +227,19 @@ class FactureController extends Controller
             $facture->invoice_signature_date = Carbon::now();
             $facture->save();
 
+            DB::commit();
             session()->flash('success', 'Le vente est fait avec succés!!');
             return redirect()->route('admin.musumba-steel-facture.index');
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
+
     }
 
     public function validerFacture($invoice_number)
@@ -234,6 +247,8 @@ class FactureController extends Controller
         if (is_null($this->user) || !$this->user->can('musumba_steel_facture.validate')) {
             abort(403, 'Sorry !! You are Unauthorized to validate any invoice ! more information you have to contact Marcellin');
         }
+
+        try {DB::beginTransaction();
 
         $datas = MsEbpFactureDetail::where('invoice_number', $invoice_number)->get();
         $factures = MsEbpFacture::where('invoice_number', $invoice_number)->get();
@@ -327,12 +342,24 @@ class FactureController extends Controller
                 ->update(['etat' => 2]);
             MsEbpFactureDetail::where('invoice_number', '=', $invoice_number)
                 ->update(['etat' => 2]);
+            DB::commit();
             return $response->json();
 
         }else{
 
             return $response->json();
 
+        }
+
+
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
         }
 
     }
@@ -399,7 +426,6 @@ class FactureController extends Controller
                     ];
          
             Mail::to($email1)->send(new InvoiceResetedMail($mailData));
-            
             
             session()->flash('success', 'La Facture  est annulée avec succés');
             return redirect()->route('admin.musumba-steel-facture.index');       

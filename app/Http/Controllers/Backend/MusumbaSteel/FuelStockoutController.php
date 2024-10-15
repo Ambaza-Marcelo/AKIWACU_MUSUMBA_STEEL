@@ -50,7 +50,7 @@ class FuelStockoutController extends Controller
             abort(403, 'Sorry !! You are Unauthorized to view any stockout !');
         }
 
-        $fuel_stockouts = MsFuelStockout::orderBy('stockout_no','desc')->get();
+        $fuel_stockouts = MsFuelStockout::orderBy('id','desc')->get();
 
         $cars = MsFuelStockoutDetail::select(
                         DB::raw('car_id,sum(quantity) as qtite'))->where('status',4)->groupBy('car_id')->orderBy('qtite','desc')->get();
@@ -105,6 +105,8 @@ class FuelStockoutController extends Controller
                     'error' => $error->errors()->all(),
                 ]);
             }
+
+            try {DB::beginTransaction();
 
             $pump_id = $request->pump_id;
             $date = $request->date;
@@ -166,8 +168,23 @@ class FuelStockoutController extends Controller
 
             MsFuelStockoutDetail::insert($insert_data);
 
+            MsFuelRequisition::where('requisition_no', '=', $requisition_no)
+                ->update(['status' => 5]);
+            MsFuelRequisitionDetail::where('requisition_no', '=', $requisition_no)
+                ->update(['status' => 5]);
+
+            DB::commit();
             session()->flash('success', 'Stockout has been created !!');
             return redirect()->route('admin.ms-fuel-stockouts.index');
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
 
         
     }
@@ -277,9 +294,9 @@ class FuelStockoutController extends Controller
         }
 
         MsFuelStockout::where('stockout_no', '=', $stockout_no)
-                ->update(['status' => 1,'reseted_by' => $this->user->name]);
+                ->update(['status' => 0,'reseted_by' => $this->user->name]);
         MsFuelStockoutDetail::where('stockout_no', '=', $stockout_no)
-                ->update(['status' => 1,'reseted_by' => $this->user->name]);
+                ->update(['status' => 0,'reseted_by' => $this->user->name]);
 
         session()->flash('success', 'Stockout has been reseted !!');
         return back();
@@ -295,6 +312,11 @@ class FuelStockoutController extends Controller
                 ->update(['status' => 3,'confirmed_by' => $this->user->name]);
             MsFuelStockoutDetail::where('stockout_no', '=', $stockout_no)
                 ->update(['status' => 3,'confirmed_by' => $this->user->name]);
+        $requisition_no = MsFuelStockout::where('stockout_no',$stockout_no)->value('requisition_no');
+        MsFuelRequisition::where('requisition_no', '=', $requisition_no)
+                ->update(['status' => 5]);
+        MsFuelRequisitionDetail::where('requisition_no', '=', $requisition_no)
+                ->update(['status' => 5]);
 
         session()->flash('success', 'Stockout has been confirmed !!');
         return back();
@@ -306,6 +328,8 @@ class FuelStockoutController extends Controller
             abort(403, 'Sorry !! You are Unauthorized to confirm any stockout !');
         }
 
+
+        try {DB::beginTransaction();
 
         $datas = MsFuelStockoutDetail::where('stockout_no', $stockout_no)->get();
 
@@ -331,7 +355,8 @@ class FuelStockoutController extends Controller
                     'quantity_stock_final' => $quantityRestant,
                     'value_stock_final' => $quantityRestant * $data->purchase_price,
                     'date' => $data->date,
-                    'transaction' => "SORTIE",
+                    'type_transaction' => "SORTIE",
+                    'document_no' => $stockout_no,
                     'description' => $data->description,
                     'created_at' => \Carbon\Carbon::now()
                 );
@@ -341,7 +366,7 @@ class FuelStockoutController extends Controller
                         'id' => $data->pump_id,
                         'quantity' => $quantityRestant,
                         'total_cost_value' => $quantityRestant * $data->cost_price,
-                        'verified' => false
+                        'verified' => true
                     );
                     
                     if ($data->quantity <= $quantityStockInitial) {
@@ -372,9 +397,12 @@ class FuelStockoutController extends Controller
                             $fuelReport->date = \Carbon\Carbon::now();
                             $fuelReport->save();
 
+                            $drapeau_index = 1;
+
                             MsFuelPump::where('id',$data->pump_id)
                             ->update($donnees);
-                            MsFuelReport::insert($reportData);
+                            $flag = 0;
+
 
                         }else{
                            session()->flash('error', $this->user->name.' , please begin to write start index pump!');
@@ -384,6 +412,35 @@ class FuelStockoutController extends Controller
 
                         
                     }else{
+
+                        foreach ($datas as $data) {
+                                $valeurStockInitial = MsFuelPump::where('id',$data->pump_id)->value('total_cost_value');
+                                $quantityStockInitial = MsFuelPump::where('id',$data->pump_id)->where('verified',true)->value('quantity');
+
+                                $quantityTotal = $quantityStockInitial + $data->quantity;
+
+                                $returnData = array(
+                                    'id' => $data->pump_id,
+                                    'quantity' => $quantityTotal,
+                                    'total_cost_value' => $quantityTotal * $data->cost_price,
+                                    'verified' => false
+                                );
+
+                                MsFuelPump::where('id',$data->pump_id)->where('verified',true)
+                            ->update($returnData);
+                            MsFuelPump::where('id','!=','')->update(['verified' => false]);
+                                $flag = 1;
+                            }
+
+
+                            if ($flag == 1 && $drapeau_index == 1) {
+                                $pump_lastest = MsFuelIndexPump::orderBy('id','desc')->first();
+                                $report_latest = MsFuelReport::orderBy('id','desc')->first();
+
+                                MsFuelIndexPump::where('id',$pump_lastest->id)->delete();
+                                MsFuelReport::where('id',$report_latest->id)->delete();
+                            }
+
                         session()->flash('error', $this->user->name.' ,Why do you want to stockout a quantity you do not have in your store? please rewrite a valid quantity!');
                         return redirect()->back();
                     }
@@ -391,13 +448,29 @@ class FuelStockoutController extends Controller
   
         }
 
+        if ($flag != 1) {
+           MsFuelReport::insert($reportData);
+        }
+
+        MsFuelPump::where('id','!=','')->update(['verified' => false]);
+
         MsFuelStockout::where('stockout_no', '=', $stockout_no)
                             ->update(['status' => 4,'approuved_by' => $this->user->name]);
         MsFuelStockoutDetail::where('stockout_no', '=', $stockout_no)
                             ->update(['status' => 4,'approuved_by' => $this->user->name]);
 
-        session()->flash('success', 'Stockout has been done successfuly !');
-                            return redirect()->back();
+        DB::commit();
+            session()->flash('success', 'Stockout has been done successfuly !');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
 
     }
 

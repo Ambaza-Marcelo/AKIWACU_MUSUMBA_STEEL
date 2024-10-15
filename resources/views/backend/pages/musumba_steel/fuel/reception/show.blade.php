@@ -83,7 +83,7 @@
                                     <td>{{ $reception->quantity_remaining }}</td>
                                     <td>{{ $reception->total_amount_remaining }}</td>
                                     <td><a href="@if($reception->order_no){{ route('admin.sotb-fuel-supplier-orders.show',$reception->order_no)}}@endif">{{ $reception->order_no }}</a></td>
-                                    <td>{{ $reception->supplier->name }}/{{ $reception->supplier->phone_no }}</td>
+                                    <td>@if($reception->supplier_id){{ $reception->supplier->name }}/{{ $reception->supplier->phone_no }}@endif</td>
                                     <td>{{ $reception->receptionnist }}</td>
                                     <td>{{ $reception->auteur }}</td>
                                     <td>{{ $reception->description }}</td>

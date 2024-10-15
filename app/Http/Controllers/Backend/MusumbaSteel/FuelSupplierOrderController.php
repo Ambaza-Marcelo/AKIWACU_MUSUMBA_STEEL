@@ -97,6 +97,8 @@ class FuelSupplierOrderController extends Controller
                 ]);
             }
 
+            try {DB::beginTransaction();
+
             $fuel_id = $request->fuel_id;
             $date = $request->date;
             $purchase_no = $request->purchase_no;
@@ -155,9 +157,20 @@ class FuelSupplierOrderController extends Controller
             $order->status = 1;
             $order->description = $description;
             $order->save();
+
+            DB::commit();
+            session()->flash('success', 'order has been created !!');
+            return redirect()->route('admin.ms-fuel-supplier-orders.index');
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
             
-        session()->flash('success', 'order has been created !!');
-        return redirect()->route('admin.ms-fuel-supplier-orders.index');
     }
 
     /**
@@ -270,6 +283,8 @@ class FuelSupplierOrderController extends Controller
             abort(403, 'Sorry !! You are Unauthorized to confirm any order !');
         }
 
+        try {DB::beginTransaction();
+
         MsFuelSupplierOrder::where('order_no', '=', $order_no)
                 ->update(['status' => 4,'approuved_by' => $this->user->name]);
             MsFuelSupplierOrderDetail::where('order_no', '=', $order_no)
@@ -282,8 +297,19 @@ class FuelSupplierOrderController extends Controller
         MsFuelPurchaseDetail::where('purchase_no', '=', $purchase_no)
                         ->update(['status' => 5]);
 
-        session()->flash('success', 'Order has been confirmed !!');
-        return back();
+        DB::commit();
+            session()->flash('success', 'Order has been confirmed !!');
+            return back();
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
+
     }
 
     public function fuelSupplierOrder($order_no)

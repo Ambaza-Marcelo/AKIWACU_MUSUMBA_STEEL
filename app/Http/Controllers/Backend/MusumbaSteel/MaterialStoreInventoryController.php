@@ -101,6 +101,8 @@ class MaterialStoreInventoryController extends Controller
                 ]);
             }
 
+            try {DB::beginTransaction();
+
             $material_id = $request->material_id;
             $date = $request->date;
             $unit = $request->unit;
@@ -163,9 +165,20 @@ class MaterialStoreInventoryController extends Controller
             $inventory->description = $description;
             $inventory->created_by = $created_by;
             $inventory->save();
+
+            DB::commit();
+            session()->flash('success', 'Inventory has been created !!');
+            return redirect()->route('admin.ms-material-store-inventory.index');
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
          
-        session()->flash('success', 'Inventory has been created !!');
-        return redirect()->route('admin.ms-material-store-inventory.index');
     }
 
     public function referenceInventaire()
@@ -272,6 +285,8 @@ class MaterialStoreInventoryController extends Controller
             abort(403, 'Sorry !! You are Unauthorized to validate any inventory !');
         }
 
+        try {DB::beginTransaction();
+
         $datas = MsMaterialStoreInventoryDetail::where('inventory_no', $inventory_no)->get();
 
         foreach($datas as $data){
@@ -326,8 +341,19 @@ class MaterialStoreInventoryController extends Controller
             MsMaterialStoreInventoryDetail::where('inventory_no', '=', $inventory_no)
                 ->update(['status' => 2,'validated_by' => $this->user->name]);
 
-        session()->flash('success', 'inventory has been validated !!');
-        return back();
+         DB::commit();
+            session()->flash('success', 'inventory has been validated !!');
+            return back();
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
+
     }
 
     public function rejectInventory($inventory_no)

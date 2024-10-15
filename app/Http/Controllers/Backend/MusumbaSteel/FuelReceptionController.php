@@ -50,7 +50,7 @@ class FuelReceptionController extends Controller
             abort(403, 'Sorry !! You are Unauthorized to view any reception !');
         }
 
-        $receptions = MsFuelReception::all();
+        $receptions = MsFuelReception::orderBy('id','desc')->get();
         return view('backend.pages.musumba_steel.fuel.reception.index', compact('receptions'));
     }
 
@@ -122,6 +122,8 @@ class FuelReceptionController extends Controller
                     'error' => $error->errors()->all(),
                 ]);
             }
+
+            try {DB::beginTransaction();
 
             $fuel_id = $request->fuel_id;
             $date = $request->date;
@@ -222,9 +224,20 @@ class FuelReceptionController extends Controller
             $reception->status = 1;
             $reception->description = $description;
             $reception->save();
-            
-        session()->flash('success', 'reception has been created !!');
-        return redirect()->route('admin.ms-fuel-receptions.index');
+
+            DB::commit();
+            session()->flash('success', 'reception has been created !!');
+            return redirect()->route('admin.ms-fuel-receptions.index');
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
+        
     }
 
     public function storeWithoutOrder(Request $request)
@@ -251,6 +264,8 @@ class FuelReceptionController extends Controller
                     'error' => $error->errors()->all(),
                 ]);
             }
+
+            try {DB::beginTransaction();
 
             $fuel_id = $request->fuel_id;
             $date = $request->date;
@@ -351,9 +366,20 @@ class FuelReceptionController extends Controller
             $reception->status = 1;
             $reception->description = $description;
             $reception->save();
+
+            DB::commit();
+            session()->flash('success', 'reception has been created !!');
+            return redirect()->route('admin.ms-fuel-receptions.index');
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
             
-        session()->flash('success', 'reception has been created !!');
-        return redirect()->route('admin.ms-fuel-receptions.index');
     }
 
     /**
@@ -497,6 +523,8 @@ class FuelReceptionController extends Controller
             abort(403, 'Sorry !! You are Unauthorized to confirm any reception !');
         }
 
+        try {DB::beginTransaction();
+
 
         $datas = MsFuelReceptionDetail::where('reception_no', $reception_no)->get();
 
@@ -525,6 +553,8 @@ class FuelReceptionController extends Controller
                     'created_by' => $this->user->name,
                     'description' => $data->description,
                     'date' => $data->date,
+                    'type_transaction' => "ACHATS",
+                    'document_no' => $reception_no,
                     'created_at' => \Carbon\Carbon::now()
                 );
                 $reportStoreData[] = $reportStore;
@@ -546,18 +576,18 @@ class FuelReceptionController extends Controller
                         'cump' => $cump
                     );
 
-                    MsFuel::where('id',$data->fuel_id)
-                        ->update($fuelData);
-
                         $fuel = MsFuelPump::where("id",$data->pump_id)->value('fuel_id');
 
                         if (!empty($fuel)) {
-                            MsFuelReport::insert($reportStoreData);
+                            $flag = 1;
                             MsFuelPump::where('fuel_id',$data->fuel_id)
                         ->update($pumpStore);
+                        MsFuel::where('id',$data->fuel_id)
+                        ->update($fuelData);
                         }else{
-                            MsFuelReport::insert($reportStoreData);
-                            MsFuelPump::insert($pumpStoreData);
+                            $flag = 0;
+                            session()->flash('error', 'this type of fuel is not linkded to the pump');
+                            return back();
                         }
 
 
@@ -576,13 +606,27 @@ class FuelReceptionController extends Controller
 
             }
 
+            if ($flag != 0) {
+                MsFuelReport::insert($reportStoreData);
+            }
+
             MsFuelReception::where('reception_no', '=', $reception_no)
                             ->update(['status' => 4,'approuved_by' => $this->user->name]);
             MsFuelReceptionDetail::where('reception_no', '=', $reception_no)
                             ->update(['status' => 4,'approuved_by' => $this->user->name]);
 
+            DB::commit();
             session()->flash('success', 'Reception has been done successfuly !');
-                        return back();
+            return back();
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
 
     }
 

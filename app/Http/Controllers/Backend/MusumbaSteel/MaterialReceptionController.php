@@ -125,6 +125,8 @@ class MaterialReceptionController extends Controller
                 ]);
             }
 
+            try {DB::beginTransaction();
+
             $material_id = $request->material_id;
             $date = $request->date;
             $vat_supplier_payer = $request->vat_supplier_payer;
@@ -225,9 +227,20 @@ class MaterialReceptionController extends Controller
             $reception->status = 1;
             $reception->description = $description;
             $reception->save();
-            
-        session()->flash('success', 'reception has been created !!');
-        return redirect()->route('admin.ms-material-receptions.index');
+
+            DB::commit();
+            session()->flash('success', 'reception has been created !!');
+            return redirect()->route('admin.ms-material-receptions.index');
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
+        
     }
 
     public function storeWithoutOrder(Request $request)
@@ -255,6 +268,8 @@ class MaterialReceptionController extends Controller
                     'error' => $error->errors()->all(),
                 ]);
             }
+
+            try {DB::beginTransaction();
 
             $material_id = $request->material_id;
             $date = $request->date;
@@ -357,9 +372,20 @@ class MaterialReceptionController extends Controller
             $reception->status = 1;
             $reception->description = $description;
             $reception->save();
+
+            DB::commit();
+            session()->flash('success', 'reception has been created !!');
+            return redirect()->route('admin.ms-material-receptions.index');
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
             
-        session()->flash('success', 'reception has been created !!');
-        return redirect()->route('admin.ms-material-receptions.index');
     }
 
     /**
@@ -503,6 +529,8 @@ class MaterialReceptionController extends Controller
             abort(403, 'Sorry !! You are Unauthorized to confirm any reception !');
         }
 
+        try {DB::beginTransaction();
+
 
         $datas = MsMaterialReceptionDetail::where('reception_no', $reception_no)->get();
 
@@ -534,7 +562,8 @@ class MaterialReceptionController extends Controller
                     'cump' => $data->new_purchase_price,
                     'created_by' => $this->user->name,
                     'description' => $data->description,
-                    'date' => $data->date,
+                    'type_transaction' => "ACHATS",
+                    'document_no' => $reception_no,
                     'created_at' => \Carbon\Carbon::now()
                 );
                 $reportStoreData[] = $reportStore;
@@ -557,18 +586,19 @@ class MaterialReceptionController extends Controller
                         'cump' => $cump
                     );
 
-                    MsMaterial::where('id',$data->material_id)
-                        ->update($materialData);
 
                         $material = MsMaterialStoreDetail::where('code',$code_store_destination)->where("material_id",$data->material_id)->value('material_id');
 
                         if (!empty($material)) {
-                            MsMaterialReport::insert($reportStoreData);
+                            $flag = 1;
+                            MsMaterial::where('id',$data->material_id)
+                            ->update($materialData);
                             MsMaterialStoreDetail::where('code',$code_store_destination)->where('material_id',$data->material_id)
                         ->update($mdStore);
                         }else{
-                            MsMaterialReport::insert($reportStoreData);
-                            MsMaterialStoreDetail::insert($storeData);
+                            $flag = 0;
+                            session()->flash('error', 'this item is not saved in the stock');
+                            return back();
                         }
 
 
@@ -587,22 +617,29 @@ class MaterialReceptionController extends Controller
 
                         
                 }
+
+            if ($flag != 0) {
+                MsMaterialReport::insert($reportStoreData);
+            }
             MsMaterialReception::where('reception_no', '=', $reception_no)
                             ->update(['status' => 4,'approuved_by' => $this->user->name]);
             MsMaterialReceptionDetail::where('reception_no', '=', $reception_no)
                             ->update(['status' => 4,'approuved_by' => $this->user->name]);
 
+        DB::commit();
             session()->flash('success', 'Reception has been done successfuly !, to '.$code_store_destination);
             return back();
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
 
     }
-
-    public function get_reception_data()
-    {
-        return Excel::download(new ReceptionExport, 'receptions.xlsx');
-    }
-
-
     /**
      * Remove the specified resource from storage.
      *

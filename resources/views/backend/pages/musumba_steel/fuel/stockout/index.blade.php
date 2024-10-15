@@ -102,7 +102,7 @@
                                         @if (Auth::guard('admin')->user()->can('musumba_steel_fuel_stockout.approuve'))
                                         @if($stockout->status == 3)
                                             <a class="btn btn-primary text-white" href="{{ route('admin.ms-fuel-stockouts.approuve', $stockout->stockout_no) }}"
-                                            onclick="event.preventDefault(); document.getElementById('approuve-form-{{ $stockout->stockout_no }}').submit();">
+                                            onclick="event.preventDefault(); document.getElementById('approuve-form-{{ $stockout->stockout_no }}').submit();this.style.visibility='hidden';" ondblclick="this.style.visibility='hidden';">
                                                 Approuver
                                             </a>
 

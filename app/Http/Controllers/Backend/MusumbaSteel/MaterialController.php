@@ -80,6 +80,7 @@ class MaterialController extends Controller
             'code_store' => 'required',
         ]);
 
+        try {DB::beginTransaction();
         $code_store = $request->code_store;
         // Create New Item
         $material = new MsMaterial();
@@ -135,8 +136,19 @@ class MaterialController extends Controller
                 $material_in_store->save();
             }
 
-        session()->flash('success', 'Material has been created !!');
-        return redirect()->route('admin.ms-materials.index');
+            DB::commit();
+            session()->flash('success', 'Material has been created !!');
+            return redirect()->route('admin.ms-materials.index');
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
+
     }
 
     /**
@@ -195,6 +207,8 @@ class MaterialController extends Controller
             'code_store' => 'required',
         ]);
 
+        try {DB::beginTransaction();
+
         $code_store = $request->code_store;
 
         $material = MsMaterial::where('id',$id)->first();
@@ -250,8 +264,18 @@ class MaterialController extends Controller
                 $material_in_store->save();
             }
 
-        session()->flash('success', 'Material has been updated !!');
-        return redirect()->route('admin.ms-materials.index');
+            DB::commit();
+            session()->flash('success', 'Material has been updated !!');
+            return redirect()->route('admin.ms-materials.index');
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
     }
 
     /**

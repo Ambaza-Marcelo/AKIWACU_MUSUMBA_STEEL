@@ -98,6 +98,8 @@ class MaterialSupplierOrderController extends Controller
                 ]);
             }
 
+            try {DB::beginTransaction();
+
             $material_id = $request->material_id;
             $date = $request->date;
             $purchase_no = $request->purchase_no;
@@ -158,9 +160,20 @@ class MaterialSupplierOrderController extends Controller
             $order->status = 1;
             $order->description = $description;
             $order->save();
+
+            DB::commit();
+            session()->flash('success', 'order has been created !!');
+            return redirect()->route('admin.ms-material-supplier-orders.index');
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
             
-        session()->flash('success', 'order has been created !!');
-        return redirect()->route('admin.ms-material-supplier-orders.index');
     }
 
     /**
@@ -277,6 +290,8 @@ class MaterialSupplierOrderController extends Controller
             abort(403, 'Sorry !! You are Unauthorized to confirm any order !');
         }
 
+        try {DB::beginTransaction();
+
         MsMaterialSupplierOrder::where('order_no', '=', $order_no)
                 ->update(['status' => 4,'approuved_by' => $this->user->name]);
             MsMaterialSupplierOrderDetail::where('order_no', '=', $order_no)
@@ -289,8 +304,19 @@ class MaterialSupplierOrderController extends Controller
         MsMaterialPurchaseDetail::where('purchase_no', '=', $purchase_no)
                         ->update(['status' => 5]);
 
-        session()->flash('success', 'Order has been confirmed !!');
-        return back();
+        DB::commit();
+            session()->flash('success', 'Order has been confirmed !!');
+            return back();
+        } catch (\Exception $e) {
+            // An error occured; cancel the transaction...
+
+            DB::rollback();
+
+            // and throw the error again.
+
+            throw $e;
+        }
+
     }
 
     public function materialSupplierOrder($order_no)
