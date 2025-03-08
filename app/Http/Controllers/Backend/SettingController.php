@@ -13,12 +13,12 @@ class SettingController extends Controller
     //
      public function index()
     {
-    	$settings = DB::table('settings')->orderBy('created_at','desc')->get();
-    	return view('backend.pages.setting.index',compact('settings'));
+        $settings = DB::table('settings')->orderBy('created_at','desc')->get();
+        return view('backend.pages.setting.index',compact('settings'));
     }
     public function create()
     {
-    	return view('backend.pages.setting.create');
+        return view('backend.pages.setting.create');
     }
 
      public function store(Request $request)
@@ -29,12 +29,25 @@ class SettingController extends Controller
             'nif' => 'required',
             'rc' => 'required',
             'commune' => 'required',
+            'province' => 'required',
             'zone' => 'required',
+
+            'tp_type' => 'required',
+            'vat_taxpayer' => 'required',
+            'ct_taxpayer' => 'required',
+            'tl_taxpayer' => 'required',
+            'tp_fiscal_center' => 'required',
+            'tp_activity_sector' => 'required',
+            'tp_legal_form' => 'required',
+            'postal_number' => 'required',
             'quartier' => 'required',
             'rue' => 'required',
+            'max_line' => 'required',
             'logo' => 'required|mimes:jpeg,jpg,png,svg|max:2048',
 
         ]);
+
+        
 
         $storagepath = $request->file('logo')->store('public/logo');
         $fileName = basename($storagepath);
@@ -77,9 +90,21 @@ class SettingController extends Controller
             'nif' => 'required',
             'rc' => 'required',
             'commune' => 'required',
+            'province' => 'required',
             'zone' => 'required',
+
+            'tp_type' => 'required',
+            'vat_taxpayer' => 'required',
+            'ct_taxpayer' => 'required',
+            'tl_taxpayer' => 'required',
+            'tp_fiscal_center' => 'required',
+            'tp_activity_sector' => 'required',
+            'tp_legal_form' => 'required',
+            'postal_number' => 'required',
             'quartier' => 'required',
-            'rue' => 'required'
+            'rue' => 'required',
+            'max_line' => 'required',
+            'logo' => 'required|mimes:jpeg,jpg,png,svg|max:2048',
 
         ]);
 

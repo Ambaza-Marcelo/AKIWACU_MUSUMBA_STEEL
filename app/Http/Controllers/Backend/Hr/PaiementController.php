@@ -74,7 +74,7 @@ class PaiementController extends Controller
 
         $journal_paie = HrJournalPaie::where('etat', 0)->first();
         $employes = HrEmploye::where('company_id',$company_id)->whereNotIn('id', function($q){
-        $q->select('employe_id')->where('code','0006')->where('employe_id','!=','')->from('hr_paiements');
+        $q->select('employe_id')->where('code','0010')->where('employe_id','!=','')->from('hr_paiements');
         })->orderBy('firstname')->get();
         
 

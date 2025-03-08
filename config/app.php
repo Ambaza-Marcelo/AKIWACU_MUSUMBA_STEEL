@@ -18,6 +18,8 @@ return [
     'guzzle_test_url' => env('GUZZLE_TEST_URL'),
     'guzzle_musumba_steel_url' => env('GUZZLE_MUSUMBA_STEEL_URL'),
     'guzzle_biotime_url' => env('GUZZLE_BIOTIME_URL'),
+    'obr_test_username' => env('OBR_TEST_USERNAME'),
+    'obr_test_pwd' => env('OBR_TEST_PWD'),
 
     /*
     |--------------------------------------------------------------------------

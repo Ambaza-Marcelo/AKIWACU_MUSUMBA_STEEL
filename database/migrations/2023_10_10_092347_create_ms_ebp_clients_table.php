@@ -16,10 +16,14 @@ class CreateMsEbpClientsTable extends Migration
         Schema::create('ms_ebp_clients', function (Blueprint $table) {
             $table->id();
             $table->string('customer_name')->nullable(true);
+            $table->unique('customer_name');
             $table->string('telephone')->nullable(true);
+            $table->unique('telephone');
             $table->string('mail')->nullable(true);
+            $table->unique('mail');
             $table->string('customer_TIN')->nullable(true);
             $table->unique('customer_TIN');
+            $table->string('tp_type')->nullable(true);
             $table->string('customer_address')->nullable(true);
             $table->string('vat_customer_payer')->nullable(true);
             $table->string('company')->nullable(true);
@@ -41,6 +45,8 @@ class CreateMsEbpClientsTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::dropIfExists('ms_ebp_clients');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

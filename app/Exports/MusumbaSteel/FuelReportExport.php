@@ -27,7 +27,7 @@ class FuelReportExport implements FromCollection, WithMapping, WithHeadings
         $end_date = $endDate.' 23:59:59';
 
         return MsFuelReport::select(
-                        DB::raw('id,created_at,date,pump_id,quantity_inventory,car_id,quantity_stock_initial,description,stock_total,cump,created_by,quantity_stockin,quantity_stockout,driver_id,start_index,end_index'))->whereBetween('created_at',[$start_date,$end_date])->groupBy('id','created_at','date','pump_id','car_id','quantity_stock_initial','description','cump','created_by','quantity_stockin','quantity_stockout','stock_total','driver_id','quantity_inventory','start_index','end_index')->orderBy('id','asc')->get();
+                        DB::raw('id,created_at,date,type_transaction,document_no,pump_id,quantity_inventory,car_id,quantity_stock_initial,description,stock_total,cump,created_by,quantity_stockin,quantity_reception,quantity_stockout,driver_id,start_index,end_index,pump_id'))->whereBetween('date',[$start_date,$end_date])->groupBy('id','created_at','date','type_transaction','document_no','pump_id','car_id','quantity_stock_initial','description','cump','created_by','quantity_stockin','quantity_stockout','stock_total','driver_id','quantity_inventory','quantity_reception','start_index','end_index','pump_id')->orderBy('id','asc')->get();
     }
 
     public function map($data) : array {
@@ -36,10 +36,18 @@ class FuelReportExport implements FromCollection, WithMapping, WithHeadings
             $quantite = $data->quantity_inventory;
             $stock_total = $data->quantity_inventory;
             $stock_final = $data->quantity_inventory;
-        }else{
+        }elseif (!empty($data->quantity_reception)) {
+            $quantite = $data->quantity_reception;
+            $stock_total = $data->quantity_stock_initial + $quantite;
+            $stock_final = ($data->quantity_stock_initial + $quantite) - ($data->quantity_stockout);
+        }elseif (!empty($data->quantity_stockin)){
             $quantite = $data->quantity_stockin;
-            $stock_total = $data->quantity_stock_initial + $data->quantity_stockin;
-            $stock_final = ($data->quantity_stock_initial + $data->quantity_stockin) - ($data->quantity_stockout);
+            $stock_total = $data->quantity_stock_initial + $quantite;
+            $stock_final = ($data->quantity_stock_initial + $quantite) - ($data->quantity_stockout);
+        }else{
+            $quantite = 0;
+            $stock_total = 0;
+            $stock_final = 0;
         }
 
         if (!empty($data->car_id)) {
@@ -52,11 +60,20 @@ class FuelReportExport implements FromCollection, WithMapping, WithHeadings
             $lastname = '';
         }
 
+        if (!empty($data->pump_id)) {
+            $pump = $data->pump->name;
+            $capacity = $data->pump->capacity;
+        }else{
+            $pump = "";
+            $capacity = "";
+        }
+
         return [
             $data->id,
-            \Carbon\Carbon::parse($data->created_at)->format('d-m-Y'),
-            \Carbon\Carbon::parse($data->date)->format('d-m-Y'),
-            $data->pump->name,
+            \Carbon\Carbon::parse($data->created_at)->format('d/m/Y'),
+            \Carbon\Carbon::parse($data->date)->format('d/m/Y'),
+            $pump,
+            $capacity,
             $data->pump->fuel->name,
             $data->quantity_stock_initial,
             $quantite,
@@ -67,6 +84,8 @@ class FuelReportExport implements FromCollection, WithMapping, WithHeadings
             $data->start_index,
             $data->end_index,
             $data->created_by,
+            $data->type_transaction,
+            $data->document_no,
             $data->description
         ] ;
  
@@ -78,7 +97,8 @@ class FuelReportExport implements FromCollection, WithMapping, WithHeadings
             '#',
             'Date de Saisie',
             'Date Operation',
-            'Cuve',
+            'Cuve de stockage',
+            'Capacite',
             'Carburant',
             'Q. Stock Initial',
             'Quantite Entree',
@@ -89,6 +109,8 @@ class FuelReportExport implements FromCollection, WithMapping, WithHeadings
             'Index Depart',
             'Index de fin',
             'Auteur',
+            'Type Mouvement',
+            'Document No',
             'Description'
         ] ;
     }

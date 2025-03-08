@@ -53,16 +53,16 @@ class RolePermissionSeeder extends Seeder
                 ]
             ],
             [
-                'group_name' => 'address',
+                'group_name' => 'client',
                 'permissions' => [
-                    // address Permissions
-                    'address.create',
-                    'address.view',
-                    'address.edit',
-                    'address.delete',
+                    // client Permissions
+                    'client.create',
+                    'client.view',
+                    'client.edit',
+                    'client.delete',
                 ]
             ],
-             [
+            [
                 'group_name' => 'setting',
                 'permissions' => [
                     // setting Permissions
@@ -70,33 +70,6 @@ class RolePermissionSeeder extends Seeder
                     'setting.view',
                     'setting.edit',
                     'setting.delete',
-                ]
-            ],
-            [
-                'group_name' => 'fiches',
-                'permissions' => [
-                    // fiches Permissions
-                    'bon_entree.imprimer',
-                    'bon_sortie.imprimer',
-                    'fiche_reception_boisson.imprimer',
-                    'fiche_reception_nourriture.imprimer',
-                    'fiche_reception_material.imprimer',
-                    'facture.imprimer',
-                    'fiche_commande_boisson.imprimer',
-                    'fiche_commande_nourriture.imprimer',
-                    'fiche_commande_materiel.imprimer',
-                    'fiche_requisition_boisson.imprimer',
-                    'fiche_requisition_nourriture.imprimer',
-                    'fiche_requisition_materiel.imprimer',
-                    'fiche_transfert_boisson.imprimer',
-                    'fiche_transfert_nourriture.imprimer',
-                    'fiche_transfert_materiel.imprimer',
-                    'fiche_stock_boisson.imprimer',
-                    'fiche_stock_nourriture.imprimer',
-                    'fiche_stock_materiel.imprimer',
-                    'fiche_rapport_boisson.imprimer',
-                    'fiche_rapport_nourriture.imprimer',
-                    'fiche_rapport_materiel.imprimer',
                 ]
             ],
             [
@@ -362,14 +335,6 @@ class RolePermissionSeeder extends Seeder
                     // musumba_steel_dashboard Permissions
                     'musumba_steel_dashboard.view',
                     'musumba_steel_dashboard.edit',
-                ]
-            ],
-            [
-                'group_name' => 'musumba_holding_data',
-                'permissions' => [
-                    // musumba_holding_data Permissions
-                    'musumba_holding_data.view',
-                    'musumba_holding_data.edit',
                 ]
             ],
             [
@@ -728,7 +693,7 @@ class RolePermissionSeeder extends Seeder
                 'permissions' => [
                     'musumba_steel_material_report.view',
                 ]
-            ],
+            ]
         ];
 
 

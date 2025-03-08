@@ -26,58 +26,72 @@
 </div>
 <!-- page title area end -->
 
+@if (Auth::guard('admin')->user()->can('musumba_steel_fuel_pump.view'))
 <div class="main-content-inner">
   <div class="row">
     <div class="col-md-2" id="side-navbar">
     </div>
+
     <div class="col-lg-12"> 
         <div class="row">
-            <div class="col-md-10 offset-md-1">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <canvas id="canvas" height="280" width="500"></canvas>
-                    </div>
+        <div class="col-md-10 offset-md-1">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <canvas id="canvas" height="280" width="500"></canvas>
                 </div>
             </div>
         </div>
+    </div>
     <br><br>
     </div>
-    </div>  
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3 mb-lg-0">
-                            <div class="card">
-                                <div class="seo-fact sbg4">
-                                    <a href="">
-                                        <div class="p-4 d-flex justify-content-between align-items-center">
-                                            <div class="seofct-icon">
-                                                <img src="{{ asset('img/undraw_toy_car_-7-umw.svg') }}" width="60">
-                                              
-                                            </div>
-                                            <h2>
-                                            </h2>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div><br>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="seo-fact sbg3">
-                                    <a href="">
-                                        <div class="p-4 d-flex justify-content-between align-items-center">
-                                            <div class="seofct-icon">
-                                                <img src="{{ asset('img/undraw_resume_folder_re_e0bi.svg') }}" width="100">
-                                            </div>
-                                            <h2>
-                                                DOSSIER DES RAPPORTS
-                                            </h2>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                </div>       
+    </div><br>
   <!-- ambaza marcellin -pink -->
 </div>
+@endif
+@if (Auth::guard('admin')->user()->can('dashboard.view'))
+<script type="text/javascript">
+    var year = <?php echo $year; ?>;
+    var gasoil_stockout = <?php echo $gasoil_stockout; ?>;
+    var essence_stockout = <?php echo $essence_stockout; ?>;
+
+    var barChartData = {
+        labels: year,
+        datasets: [
+        {
+            label: 'GASOIL',
+            backgroundColor: "#077D92",
+            data: gasoil_stockout
+        },
+        {
+            label: 'ESSENCE',
+            backgroundColor: "pink",
+            data: essence_stockout
+        }
+
+        ]
+    };
+
+    window.onload = function() {
+        var ctx = document.getElementById("canvas").getContext("2d");
+        window.myBar = new Chart(ctx, {
+            type: 'bar',
+            data: barChartData,
+            options: {
+                elements: {
+                    rectangle: {
+                        borderWidth: 2,
+                        borderColor: '#c1c1c1',
+                        borderSkipped: 'bottom'
+                    }
+                },
+                responsive: true,
+                title: {
+                    display: true,  
+                    text: 'STATISTIQUE DES SORTIES DU CARBURANT PAR AN'
+                }
+            }
+        });
+    };
+</script>
+@endif
 @endsection

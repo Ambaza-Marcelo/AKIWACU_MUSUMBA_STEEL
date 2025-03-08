@@ -54,114 +54,127 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-6">
-                                <label for="invoice_type">Type Facture</label>
-                                <div class="form-group">
-                                    @if($facture->invoice_type == 'FN')
-                                    <label class="text">F. Normale
-                                    <input type="checkbox" value="FN" checked="checked" class="form-control" readonly>
-                                    </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    @endif
-                                    @if($facture->invoice_type == 'RC')
-                                    <label class="text">R. Caution
-                                    <input type="checkbox" checked="checked" value="RC" class="form-control" readonly>
-                                    </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    @endif
-                                    @if($facture->invoice_type == 'RHF')
-                                    <label class="text">Reduction HF
-                                    <input type="checkbox" checked="checked" value="RHF" class="form-control" readonly>
-                                    </label>
-                                    @endif
-                                </div>
+                            <div class="col-md-6">
+                                <label for="invoice_date">Date Facture</label>
+                                <input type="datetime-local" name="invoice_date" class="form-control" value="{{ $facture->invoice_date }}" required>
                             </div>
-                            <div class="col-sm-6">
-                                <label for="tp_type">Type Contribuable</label>
-                                <div class="form-group">
-                                    @if($facture->tp_type == '1')
-                                    <label class="text">Personne Physique
-                                    <input type="checkbox" name="tp_type" value="1" checked="checked" class="form-control" readonly>
-                                    </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    @endif
-                                    @if($facture->tp_type == '2')
-                                    <label class="text">Personne Morale
-                                    <input type="checkbox" name="tp_type" value="2" class="form-control" readonly>
-                                    </label>
-                                    @endif
-                                </div>
+                            <div class="col-md-6">
+                                <label for="invoice_number">Facture No</label>
+                                <input type="text" name="invoice_number" value="{{ $facture->invoice_number }}" class="form-control" required>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-4">
+                                <label for="invoice_type">Type Facture</label>
+                                <div class="form-group">
+                                    <label class="text">F. Normale
+                                    <input type="checkbox" name="invoice_type" value="FN" @if($facture->invoice_type == 'FN') checked="checked" @endif class="form-control">
+                                    </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label class="text">R. Caution
+                                    <input type="checkbox" disabled name="invoice_type" value="RC" @if($facture->invoice_type == 'RC') checked="checked" @endif class="form-control">
+                                    </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label class="text">Reduction HF
+                                    <input type="checkbox" name="invoice_type" disabled value="RHF" @if($facture->invoice_type == 'RHF') checked="checked" @endif class="form-control">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="tp_type">Type Contribuable</label>
+                                <div class="form-group">
+                                    <label class="text">Personne Physique
+                                    <input type="checkbox" name="tp_type" value="1" @if($setting->tp_type == '1') checked="checked" @endif class="form-control">
+                                    </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label class="text">Société
+                                    <input type="checkbox" name="tp_type" value="2" @if($setting->tp_type == '2') checked="checked" @endif class="form-control">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="vat_taxpayer">Assujetti à la TVA</label>
+                                <div class="form-group">
+                                    <label class="text">Non Assujetti
+                                    <input type="checkbox" name="vat_taxpayer" value="0" @if($setting->vat_taxpayer == '0') checked="checked" @endif class="form-control">
+                                    </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label class="text">Assujetti
+                                    <input type="checkbox" name="vat_taxpayer" value="1" @if($setting->vat_taxpayer == '1') checked="checked" @endif class="form-control">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        @if($setting)
+                        <div class="row">
+                            <div class="col-sm-4">
                                 <label for="tp_name">Nom et Prenom</label>
-                                <input type="text" value="{{ $facture->tp_name}}" class="form-control" readonly>
+                                <input type="text" value="{{ $setting->name }}" name="tp_name" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="tp_TIN">NIF Contribuable</label>
-                                <input type="text" value="{{ $facture->tp_TIN}}" class="form-control" readonly>
+                                <input type="text" value="{{ $setting->nif }}" name="tp_TIN" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="tp_trade_number">RC du Contribuable</label>
-                                <input type="text" value="{{ $facture->tp_trade_number}}" class="form-control" readonly>
+                                <input type="text" value="{{ $setting->rc }}" name="tp_trade_number" class="form-control">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-4">
                                 <label for="tp_postal_number">Boite Postal</label>
-                                <input type="text" value="{{ $facture->tp_postal_number}}" class="form-control" readonly>
+                                <input type="text" value="0000" name="tp_postal_number" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="tp_phone_number">Tel. du Contribuable</label>
-                                <input type="text" value="{{ $facture->tp_phone_number}}" class="form-control" readonly>
+                                <input type="text" value="{{ $setting->telephone1 }}" name="tp_phone_number" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="tp_address_province">Province</label>
-                                <input type="text" value="{{ $facture->tp_address_province}}" class="form-control" readonly>
+                                <input type="text" value="BUJUMBURA" name="tp_address_province" class="form-control">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-4">
                                 <label for="tp_address_commune">Commune</label>
-                                <input type="text" value="{{ $facture->tp_address_commune}}" class="form-control" readonly>
+                                <input type="text" value="{{ $setting->commune }}" name="tp_address_commune" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="tp_address_quartier">Quartier</label>
-                                <input type="text" value="{{ $facture->tp_address_quartier}}" class="form-control" readonly>
+                                <input type="text" value="{{ $setting->quartier }}" name="tp_address_quartier" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="tp_address_avenue">Avenue</label>
-                                <input type="text" value="{{ $facture->tp_address_avenue}}" class="form-control" readonly>
+                                <input type="text" value="{{ $setting->rue }}" name="tp_address_avenue" class="form-control">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-4">
                                 <label for="tp_address_rue">Rue</label>
-                                <input type="text" value="{{ $facture->tp_address_rue}}" class="form-control" readonly>
+                                <input type="text" value="{{ $setting->rue }}" name="tp_address_rue" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="tp_address_number">Numero</label>
-                                <input type="text" value="{{ $facture->tp_address_number}}" class="form-control" readonly>
+                                <input type="text" value="0" name="tp_address_number" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="ct_taxpayer">Assujetti à la taxe de conso.</label>
                                 <div class="form-group">
                                     <label class="text">Non Assujetti
-                                    <input type="checkbox" name="ct_taxpayer" value="0" checked="checked" class="form-control" readonly>
+                                    <input type="checkbox" name="ct_taxpayer" value="0" @if($setting->ct_taxpayer == '0') checked="checked" @endif  class="form-control">
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label class="text">Assujetti
-                                    <input type="checkbox" name="ct_taxpayer" value="1" class="form-control" readonly>
+                                    <input type="checkbox" name="ct_taxpayer" value="1" @if($setting->ct_taxpayer == '1') checked="checked" @endif class="form-control">
                                     </label>
                                 </div>
                             </div>
                         </div>
+                        @endif
                         <div class="row">
                             <div class="col-sm-4">
                                 <label for="tl_taxpayer">Assujetti au PFL</label>
                                 <div class="form-group">
                                     <label class="text">Non Assujetti
-                                    <input type="checkbox" name="tl_taxpayer" value="0" checked="checked" class="form-control" readonly>
+                                    <input type="checkbox" name="tl_taxpayer" value="0" @if($setting->tl_taxpayer == '0') checked="checked" @endif class="form-control">
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label class="text">Assujetti
-                                    <input type="checkbox" name="tl_taxpayer" value="1" class="form-control" readonly>
+                                    <input type="checkbox" name="tl_taxpayer" value="1" @if($setting->tl_taxpayer == '1') checked="checked" @endif class="form-control">
                                     </label>
                                 </div>
                             </div>
@@ -169,40 +182,40 @@
                                 <label for="tp_fiscal_center">Centre Fiscale</label>
                                 <div class="form-group">
                                     <label class="text">DGC
-                                    <input type="checkbox" name="tp_fiscal_center" value="DGC" class="form-control" readonly>
+                                    <input type="checkbox" name="tp_fiscal_center" value="DGC" @if($setting->tp_fiscal_center == 'DGC') checked="checked" @endif class="form-control">
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label class="text">DMC
-                                    <input type="checkbox" checked="checked" name="tp_fiscal_center" value="DMC" class="form-control" readonly>
+                                    <input type="checkbox" name="tp_fiscal_center" value="DMC" @if($setting->tp_fiscal_center == 'DMC') checked="checked" @endif class="form-control">
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label class="text">DPMC
-                                    <input type="checkbox" name="tp_fiscal_center" value="DPMC" class="form-control" readonly>
+                                    <input type="checkbox" name="tp_fiscal_center" value="DPMC" @if($setting->tp_fiscal_center == 'DPMC') checked="checked" @endif class="form-control">
                                     </label>
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <label for="tp_activity_sector">Secteur d'activité</label>
-                                <input type="text" value="{{ $facture->tp_activity_sector}}" class="form-control" readonly>
+                                <input type="text" name="tp_activity_sector" class="form-control" value="{{ $setting->tp_activity_sector }}">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-4">
                                 <label for="tp_legal_form">Forme Juridique</label>
-                                <input type="text" value="{{ $facture->tp_legal_form}}" class="form-control" readonly>
+                                <input type="text" name="tp_legal_form" value="{{ $setting->tp_legal_form }}" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="payment_type">Type de Paiement</label>
                                 <div class="form-group">
                                     <label class="text">Espece
-                                    <input type="checkbox" name="payment_type" value="1" checked="checked" class="form-control">
+                                    <input type="checkbox" name="payment_type" value="1" @if($facture->payment_type == '1') checked="checked" @endif class="form-control">
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label class="text">Banque
-                                    <input type="checkbox" name="payment_type" value="2" class="form-control">
+                                    <input type="checkbox" name="payment_type" value="2" @if($facture->payment_type == '2') checked="checked" @endif class="form-control">
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label class="text">Credit
-                                    <input type="checkbox" name="payment_type" value="3" class="form-control">
+                                    <input type="checkbox" name="payment_type" value="3" @if($facture->payment_type == '3') checked="checked" @endif class="form-control">
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label class="text">Autres
-                                    <input type="checkbox" name="payment_type" value="4" class="form-control">
+                                    <input type="checkbox" name="payment_type" value="4" @if($facture->payment_type == '4') checked="checked" @endif class="form-control">
                                     </label>
                                 </div>
                             </div>
@@ -210,13 +223,13 @@
                                 <label for="invoice_currency">Type de Monaie</label>
                                 <div class="form-group">
                                     <label class="text">BIF
-                                    <input type="checkbox" name="tp_fiscal_center" value="BIF" checked="checked" class="form-control" readonly>
+                                    <input type="checkbox" name="invoice_currency" value="BIF" @if($facture->invoice_currency == 'BIF') checked="checked" @endif class="form-control">
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label class="text">USD
-                                    <input type="checkbox" name="tp_fiscal_center" value="USD" class="form-control" readonly>
+                                    <input type="checkbox" name="invoice_currency" value="USD" @if($facture->invoice_currency == 'USD') checked="checked" @endif class="form-control">
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label class="text">EUR
-                                    <input type="checkbox" name="tp_fiscal_center" value="EUR" class="form-control" readonly>
+                                    <input type="checkbox" name="invoice_currency" value="EUR" @if($facture->invoice_currency == 'EUR') checked="checked" @endif class="form-control">
                                     </label>
                                 </div>
                             </div>
@@ -239,11 +252,11 @@
                             <div class="col-sm-4">
                                 <label for="vat_customer_payer">client est assujetti TVA?</label>
                                 <div class="form-group">
-                                    <label class="text">Assujetti
-                                    <input type="checkbox" name="vat_customer_payer" value="0" checked="checked" class="form-control">
-                                    </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label class="text">Non Assujetti
-                                    <input type="checkbox" name="vat_customer_payer" value="1" class="form-control">
+                                    <input type="checkbox" name="vat_customer_payer" value="0" @if($facture->client->vat_customer_payer == '0') checked="checked" @endif class="form-control">
+                                    </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label class="text">Assujetti
+                                    <input type="checkbox" name="vat_customer_payer" value="1" @if($facture->client->vat_customer_payer == '1') checked="checked" @endif class="form-control">
                                     </label>
                                 </div>
                             </div>
@@ -254,27 +267,17 @@
                                 <th>Article</th>
                                 <th>Quantite</th>
                                 <th>Prix Unitaire</th>
-                                <th>TC</th>
-                                <th>P HTVA</th>
+                                <th>PVU HTVA</th>
                                 <th>TVA</th>
-                                <th>TVAC</th>
-                                <th>PFL</th>
-                                <th>Taxe Spec.</th>
-                                <th>Over The Top</th>
-                                <th>PVT</th>
+                                <th>TTC</th>
                             </tr>
                             @foreach($factureDetails as $factureDetail)
                             <tr>  
                                 <td><input type="text" value="{{ $factureDetail->article->name }}" class="form-control" readonly></td>  
                                 <td><input type="text" value="{{ $factureDetail->item_quantity }}" class="form-control" readonly /></td>  
-                                <td><input type="text" value="{{ $factureDetail->item_price }}" class="form-control" readonly /></td>
-                                <td><input type="text" value="{{ $factureDetail->item_ct }}" class="form-control" readonly /></td>   
+                                <td><input type="text" value="{{ $factureDetail->item_price }}" class="form-control" readonly /></td> 
                                 <td><input type="text" value="{{ $factureDetail->item_price_nvat }}" class="form-control" readonly /></td> 
                                 <td><input type="text" value="{{ $factureDetail->vat }}" class="form-control" readonly /></td>
-                                <td><input type="text" value="{{ $factureDetail->item_price_wvat }}" class="form-control" readonly /></td> 
-                                <td><input type="text" value="{{ $factureDetail->item_tl }}" class="form-control" readonly /></td>
-                                <td><input type="text" value="{{ $factureDetail->item_tsce_tax }}" class="form-control" readonly /></td>
-                                <td><input type="text" value="{{ $factureDetail->item_ott_tax }}" class="form-control" readonly /></td>
                                 <td><input type="text" value="{{ $factureDetail->item_total_amount }}" class="form-control" readonly /></td>
                             </tr> 
                             @endforeach

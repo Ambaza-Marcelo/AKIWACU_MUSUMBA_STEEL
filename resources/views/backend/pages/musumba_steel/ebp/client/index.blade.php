@@ -43,7 +43,7 @@
                 <div class="card-body">
                     <h4 class="header-title float-left">@lang('Liste des clients')</h4>
                     <p class="float-right mb-2">
-                        @if (Auth::guard('admin')->user()->can('musumba_steel_facture.create'))
+                        @if (Auth::guard('admin')->user()->can('client.create'))
                             <a class="btn btn-primary text-white" href="{{ route('admin.musumba-steel-clients.create') }}">@lang('messages.new')</a>
                         @endif
                     </p>
@@ -54,18 +54,22 @@
                             <thead class="bg-light text-capitalize">
                                 <tr>
                                     <th width="5%">#</th>
+                                    <th width="20%">Type Contribuable</th>
+                                    <th width="20%">Assujetti à la TVA</th>
                                     <th width="20%">Nom Client</th>
                                     <th width="20%">NIF Client</th>
                                     <th width="20%">Adresse Client</th>
                                     <th width="20%">Mail</th>
-                                    <th width="10%">Phone No</th>
-                                    <th width="15%">Action</th>
+                                    <th width="20%">Phone No</th>
+                                    <th width="30%">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                @foreach ($clients as $client)
                                <tr>
                                     <td>{{ $loop->index+1 }}</td>
+                                    <td>@if($client->tp_type == 1) Personne Physique @else Société @endif</td>
+                                    <td>@if($client->vat_customer_payer == 1) OUI @else NON @endif</td>
                                     <td>{{ $client->customer_name }}</td>
                                     <td>{{ $client->customer_TIN }}</td>
                                     <td>{{ $client->customer_address }}</td>
@@ -73,11 +77,11 @@
                                     <td>{{ $client->telephone }}</td>
 
                                     <td>
-                                        @if (Auth::guard('admin')->user()->can('musumba_steel_facture.create'))
+                                        @if (Auth::guard('admin')->user()->can('client.edit'))
                                             <a class="btn btn-success text-white" href="{{ route('admin.musumba-steel-clients.edit', $client->id) }}">@lang('messages.edit')</a>
                                         @endif
 
-                                        @if (Auth::guard('admin')->user()->can('musumba_steel_facture.create'))
+                                        @if (Auth::guard('admin')->user()->can('client.delete'))
                                             <a class="btn btn-danger text-white" href="{{ route('admin.musumba-steel-clients.destroy', $client->id) }}"
                                             onclick="event.preventDefault(); document.getElementById('delete-form-{{ $client->id }}').submit();">
                                                 @lang('messages.delete')

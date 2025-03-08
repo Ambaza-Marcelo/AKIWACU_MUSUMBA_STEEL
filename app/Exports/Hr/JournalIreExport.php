@@ -39,7 +39,7 @@ class JournalIreExport implements FromCollection, WithMapping, WithHeadings
             $inss_pension = 27000;
             $inss_risque = 2400;
         }
-
+        /*
 
         if ($remuneration_brute < 450000) {
                 $inss = ($remuneration_brute * 4)/100;
@@ -53,19 +53,20 @@ class JournalIreExport implements FromCollection, WithMapping, WithHeadings
 
             $net = $remuneration_brute - $data->somme_cotisation_inss - $data->somme_impot;
 
-            if ($net < 250000) {
+            if ($remuneration_brute < 250000) {
                 $assurance_maladie_employe = 0;
-                $assurance_maladie_employeur = 15000;
+                $assurance_maladie_employeur = 27500;
             }else{
-                $assurance_maladie_employe = 6000;
-                $assurance_maladie_employeur = 9000;
+                $assurance_maladie_employe = 11000;
+                $assurance_maladie_employeur = 16500;
             }
+            */
 
-        $total_deductions = $data->somme_cotisation_inss + $assurance_maladie_employe + $data->somme_impot + $data->retenue_pret + $data->soins_medicaux + $data->autre_retenue;
+        $total_deductions = $data->somme_cotisation_inss + $data->assurance_maladie_employe + $data->somme_impot + $data->retenue_pret + $data->soins_medicaux + $data->autre_retenue;
         $net_a_payer = $remuneration_brute - $total_deductions;
 
 
-        $base_imposable = ($remuneration_brute - $data->indemnite_logement - $data->indemnite_deplacement - $inss - $assurance_maladie_employe - $data->allocation_familiale);
+        $base_imposable = ($remuneration_brute - $data->indemnite_logement - $data->indemnite_deplacement - $data->somme_cotisation_inss - $data->assurance_maladie_employe);
 
         if ($base_imposable >= 0 && $base_imposable <= 150000) {
                 $somme_impot = 0;

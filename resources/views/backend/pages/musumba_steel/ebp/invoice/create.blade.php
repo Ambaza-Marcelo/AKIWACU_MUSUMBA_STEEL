@@ -63,10 +63,10 @@
                                     <input type="checkbox" name="invoice_type" value="FN" checked="checked" class="form-control">
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label class="text">R. Caution
-                                    <input type="checkbox" name="invoice_type" value="RC" class="form-control">
+                                    <input type="checkbox" disabled name="invoice_type" value="RC" class="form-control">
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label class="text">Reduction HF
-                                    <input type="checkbox" name="invoice_type" value="RHF" class="form-control">
+                                    <input type="checkbox" name="invoice_type" disabled value="RHF" class="form-control">
                                     </label>
                                 </div>
                             </div>
@@ -74,10 +74,10 @@
                                 <label for="tp_type">Type Contribuable</label>
                                 <div class="form-group">
                                     <label class="text">Personne Physique
-                                    <input type="checkbox" name="tp_type" value="1" class="form-control">
+                                    <input type="checkbox" name="tp_type" value="1" @if($setting->tp_type == '1') checked="checked" @endif class="form-control">
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label class="text">Société
-                                    <input type="checkbox" checked="checked" name="tp_type" value="2" class="form-control">
+                                    <input type="checkbox" name="tp_type" value="2" @if($setting->tp_type == '2') checked="checked" @endif class="form-control">
                                     </label>
                                 </div>
                             </div>
@@ -85,26 +85,27 @@
                                 <label for="vat_taxpayer">Assujetti à la TVA</label>
                                 <div class="form-group">
                                     <label class="text">Non Assujetti
-                                    <input type="checkbox" name="vat_taxpayer" value="0" class="form-control">
+                                    <input type="checkbox" name="vat_taxpayer" value="0" @if($setting->vat_taxpayer == '0') checked="checked" @endif class="form-control">
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label class="text">Assujetti
-                                    <input type="checkbox" checked="checked" name="vat_taxpayer" value="1" class="form-control">
+                                    <input type="checkbox" name="vat_taxpayer" value="1" @if($setting->vat_taxpayer == '1') checked="checked" @endif class="form-control">
                                     </label>
                                 </div>
                             </div>
                         </div>
+                        @if($setting)
                         <div class="row">
                             <div class="col-sm-4">
                                 <label for="tp_name">Nom et Prenom</label>
-                                <input type="text" value="SU MUSUMBA STEEL SA" name="tp_name" class="form-control">
+                                <input type="text" value="{{ $setting->name }}" name="tp_name" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="tp_TIN">NIF Contribuable</label>
-                                <input type="text" value="4000387391" name="tp_TIN" class="form-control">
+                                <input type="text" value="{{ $setting->nif }}" name="tp_TIN" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="tp_trade_number">RC du Contribuable</label>
-                                <input type="text" value="02664" name="tp_trade_number" class="form-control">
+                                <input type="text" value="{{ $setting->rc }}" name="tp_trade_number" class="form-control">
                             </div>
                         </div>
                         <div class="row">
@@ -114,7 +115,7 @@
                             </div>
                             <div class="col-sm-4">
                                 <label for="tp_phone_number">Tel. du Contribuable</label>
-                                <input type="text" value="22230597" name="tp_phone_number" class="form-control">
+                                <input type="text" value="{{ $setting->telephone1 }}" name="tp_phone_number" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="tp_address_province">Province</label>
@@ -124,47 +125,48 @@
                         <div class="row">
                             <div class="col-sm-4">
                                 <label for="tp_address_commune">Commune</label>
-                                <input type="text" value="NTAHANGWA" name="tp_address_commune" class="form-control">
+                                <input type="text" value="{{ $setting->commune }}" name="tp_address_commune" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="tp_address_quartier">Quartier</label>
-                                <input type="text" value="NGAGARA" name="tp_address_quartier" class="form-control">
+                                <input type="text" value="{{ $setting->quartier }}" name="tp_address_quartier" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="tp_address_avenue">Avenue</label>
-                                <input type="text" value="AVENUE DE L'AFRIQUE" name="tp_address_avenue" class="form-control">
+                                <input type="text" value="{{ $setting->rue }}" name="tp_address_avenue" class="form-control">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-4">
                                 <label for="tp_address_rue">Rue</label>
-                                <input type="text" value="AVENUE DE L'AFRIQUE" name="tp_address_rue" class="form-control">
+                                <input type="text" value="{{ $setting->rue }}" name="tp_address_rue" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="tp_address_number">Numero</label>
-                                <input type="text" value="00" name="tp_address_number" class="form-control">
+                                <input type="text" value="0" name="tp_address_number" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="ct_taxpayer">Assujetti à la taxe de conso.</label>
                                 <div class="form-group">
                                     <label class="text">Non Assujetti
-                                    <input type="checkbox" name="ct_taxpayer" value="0" checked="checked" class="form-control">
+                                    <input type="checkbox" name="ct_taxpayer" value="0" @if($setting->ct_taxpayer == '0') checked="checked" @endif  class="form-control">
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label class="text">Assujetti
-                                    <input type="checkbox" name="ct_taxpayer" value="1" class="form-control">
+                                    <input type="checkbox" name="ct_taxpayer" value="1" @if($setting->ct_taxpayer == '1') checked="checked" @endif class="form-control">
                                     </label>
                                 </div>
                             </div>
                         </div>
+                        @endif
                         <div class="row">
                             <div class="col-sm-4">
                                 <label for="tl_taxpayer">Assujetti au PFL</label>
                                 <div class="form-group">
                                     <label class="text">Non Assujetti
-                                    <input type="checkbox" name="tl_taxpayer" value="0" checked="checked" class="form-control">
+                                    <input type="checkbox" name="tl_taxpayer" value="0" @if($setting->tl_taxpayer == '0') checked="checked" @endif class="form-control">
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label class="text">Assujetti
-                                    <input type="checkbox" name="tl_taxpayer" value="1" class="form-control">
+                                    <input type="checkbox" name="tl_taxpayer" value="1" @if($setting->tl_taxpayer == '1') checked="checked" @endif class="form-control">
                                     </label>
                                 </div>
                             </div>
@@ -172,25 +174,25 @@
                                 <label for="tp_fiscal_center">Centre Fiscale</label>
                                 <div class="form-group">
                                     <label class="text">DGC
-                                    <input type="checkbox" name="tp_fiscal_center" value="DGC" class="form-control">
+                                    <input type="checkbox" name="tp_fiscal_center" value="DGC" @if($setting->tp_fiscal_center == 'DGC') checked="checked" @endif class="form-control">
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label class="text">DMC
-                                    <input type="checkbox" checked="checked" name="tp_fiscal_center" value="DMC" class="form-control">
+                                    <input type="checkbox" name="tp_fiscal_center" value="DMC" @if($setting->tp_fiscal_center == 'DMC') checked="checked" @endif class="form-control">
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label class="text">DPMC
-                                    <input type="checkbox" name="tp_fiscal_center" value="DPMC" class="form-control">
+                                    <input type="checkbox" name="tp_fiscal_center" value="DPMC" @if($setting->tp_fiscal_center == 'DPMC') checked="checked" @endif class="form-control">
                                     </label>
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <label for="tp_activity_sector">Secteur d'activité</label>
-                                <input type="text" name="tp_activity_sector" class="form-control" value="SERVICE MARCHAND">
+                                <input type="text" name="tp_activity_sector" class="form-control" value="{{ $setting->tp_activity_sector }}">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-4">
                                 <label for="tp_legal_form">Forme Juridique</label>
-                                <input type="text" value="SA" name="tp_legal_form" class="form-control">
+                                <input type="text" name="tp_legal_form" value="{{ $setting->tp_legal_form }}" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="payment_type">Type de Paiement</label>
@@ -243,10 +245,6 @@
                                 <th>Article</th>
                                 <th>Quantite</th>
                                 <th>Prix Unitaire</th>
-                                <th>TC</th>
-                                <th>PFL</th>
-                                <th>Taxe S. </th>
-                                <th>Over The Top</th>
                                 <th>Action</th>
                             </tr>
 
@@ -259,10 +257,6 @@
                                 </select></td>  
                                 <td><input type="number" step='any' min='0' name="item_quantity[]" placeholder="Quantite" class="form-control" required /></td>  
                                 <td><input type="number" step='any' min='0' name="item_price[]" placeholder="Prix" class="form-control" required /></td>
-                                <td><input type="number" step='any' min='0' name="item_ct[]" value="0" class="form-control" /></td>   
-                                <td><input type="number" step='any' min='0' name="item_tl[]" value="0" class="form-control" readonly /></td>
-                                <td><input type="number" step='any' min='0' name="item_tsce_tax[]" value="0" class="form-control" /></td>   
-                                <td><input type="number" step='any' min='0' name="item_ott_tax[]" value="0" class="form-control" /></td>
                                 <td><button type='button' class='btn btn-danger remove-tr'><i class='fa fa-trash-o' title='Supprimer la ligne' aria-hidden='false'></i></button></td> 
                             </tr> 
                         </table> 
@@ -299,18 +293,6 @@
                         "</td>"+
                         "<td>"+
                         "<input type='number' step='any' min='0' name='item_price[]' placeholder='Prix' class='form-control' />"+
-                        "</td>"+
-                        "<td>"+
-                          "<input type='number' step='any' min='0' name='item_ct[]' value='0' class='form-control'/>"+
-                        "</td>"+
-                        "<td>"+
-                          "<input type='number' step='any' min='0' name='item_tl[]' value='0' class='form-control' readonly/>"+
-                        "</td>"+
-                        "<td>"+
-                          "<input type='number' step='any' min='0' name='item_tsce_tax[]' value='0' class='form-control'/>"+
-                        "</td>"+
-                        "<td>"+
-                          "<input type='number' step='any' min='0' name='item_ott_tax[]' value='0' class='form-control'/>"+
                         "</td>"+
                         "<td>"+
                           "<button type='button' class='btn btn-danger remove-tr'><i class='fa fa-trash-o' title='Supprimer la ligne' aria-hidden='false'></i></button>"+

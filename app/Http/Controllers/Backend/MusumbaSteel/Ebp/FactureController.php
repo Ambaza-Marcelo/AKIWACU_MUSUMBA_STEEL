@@ -81,15 +81,9 @@ class FactureController extends Controller
                 'tp_address_commune' => 'required|max:50|min:5',
                 'tp_address_quartier' => 'required|max:50|min:5',
                 'client_id' => 'required',
-                //'customer_TIN' => 'required|max:30|min:4',
-                //'customer_address' => 'required|max:100|min:5',
-                //'invoice_signature' => 'required|max:90|min:10',
-                //'invoice_signature_date' => 'required|max: |min:',
                 'article_id.*'  => 'required',
                 'item_quantity.*'  => 'required',
                 'item_price.*'  => 'required',
-                'item_ct.*'  => 'required',
-                'item_tl.*'  => 'required'
             );
 
             $error = Validator::make($request->all(),$rules);
@@ -105,10 +99,10 @@ class FactureController extends Controller
             $article_id = $request->article_id;
             $item_quantity = $request->item_quantity;
             $item_price = $request->item_price;
-            $item_ct = $request->item_ct;
-            $item_tl =$request->item_tl;
-            $item_tsce_tax = $request->item_tsce_tax;
-            $item_ott_tax = $request->item_ott_tax;
+            $item_ct = 0;
+            $item_tl =0;
+            $item_tsce_tax = 0;
+            $item_ott_tax = 0;
 
             $client_id = $request->client_id;
             $invoice_number = $request->invoice_number;
@@ -127,7 +121,7 @@ class FactureController extends Controller
 
             
 
-            $invoice_signature = $request->tp_TIN."/wsl400038739100326/".Carbon::parse($request->invoice_date)->format('YmdHis')."/".$invoice_number;
+            $invoice_signature = $request->tp_TIN."/".config('app.obr_test_username')."/".Carbon::parse($request->invoice_date)->format('YmdHis')."/".$invoice_number;
 
         for( $count = 0; $count < count($article_id); $count++ )
         {
@@ -135,15 +129,15 @@ class FactureController extends Controller
 
             if($request->vat_taxpayer == 1){
                 
-                $item_price_nvat = ($item_price[$count]*$item_quantity[$count]) + $item_ct[$count];
+                $item_price_nvat = ($item_price[$count]*$item_quantity[$count]) + $item_ct;
                 $vat = 0;
                 $item_price_wvat = ($item_price_nvat + $vat);
-                $item_total_amount = $item_price_wvat + $item_tl[$count] + $item_tsce_tax[$count] + $item_ott_tax[$count];
+                $item_total_amount = $item_price_wvat + $item_tl + $item_tsce_tax + $item_ott_tax;
             }else{
-                $item_price_nvat = ($item_price[$count]*$item_quantity[$count]) + $item_ct[$count];
+                $item_price_nvat = ($item_price[$count]*$item_quantity[$count]) + $item_ct;
                 $vat = 0;
                 $item_price_wvat = ($item_price_nvat + $vat);
-                $item_total_amount = $item_price_wvat + $item_tl[$count] + $item_tsce_tax[$count] + $item_ott_tax[$count];
+                $item_total_amount = $item_price_wvat + $item_tl + $item_tsce_tax + $item_ott_tax;
             }
 
           $data = array(
@@ -178,10 +172,10 @@ class FactureController extends Controller
             'article_id'=>$article_id[$count],
             'item_quantity'=>$item_quantity[$count],
             'item_price'=>$item_price[$count],
-            'item_ct'=>$item_ct[$count],
-            'item_tl'=>$item_tl[$count],
-            'item_tsce_tax' => $item_tsce_tax[$count],
-            'item_ott_tax' => $item_ott_tax[$count],
+            'item_ct'=>$item_ct,
+            'item_tl'=>$item_tl,
+            'item_tsce_tax' => $item_tsce_tax,
+            'item_ott_tax' => $item_ott_tax,
             'item_price_nvat'=>$item_price_nvat,
             'vat'=>$vat,
             'item_price_wvat'=>$item_price_wvat,
@@ -255,8 +249,8 @@ class FactureController extends Controller
         
         $theUrl = config('app.guzzle_musumba_steel_url').'/ebms_api/login/';
         $response = Http::post($theUrl, [
-            'username'=> "wsl400038739100326",
-            'password'=> "D64iqIv?"
+            'username'=> config('app.obr_test_username'),
+            'password'=> config('app.obr_test_pwd')
 
         ]);
         $data =  json_decode($response);
@@ -383,8 +377,8 @@ class FactureController extends Controller
         
         $theUrl = config('app.guzzle_musumba_steel_url').'/ebms_api/login/';
         $response = Http::post($theUrl, [
-            'username'=> "wsl400038739100326",
-            'password'=> "D64iqIv?"
+            'username'=> config('app.obr_test_username'),
+            'password'=> config('app.obr_test_pwd')
 
         ]);
         $data =  json_decode($response);
@@ -419,13 +413,12 @@ class FactureController extends Controller
             $mailData = [
                     'title' => 'Système de facturation électronique, Musumba Steel',
                     'email1' => $email1,
-                    'email2' => $email2,
                     'invoice_number' => $invoice_number,
                     'auteur' => $auteur,
                     'cn_motif' => $cn_motif,
                     ];
          
-            Mail::to($email1)->send(new InvoiceResetedMail($mailData));
+           Mail::to($email1)->send(new InvoiceResetedMail($mailData));
             
             session()->flash('success', 'La Facture  est annulée avec succés');
             return redirect()->route('admin.musumba-steel-facture.index');       
@@ -455,12 +448,14 @@ class FactureController extends Controller
             abort(403, 'Sorry !! You are Unauthorized to view any invoice ! more information you have to contact Marcellin');
         }
 
+        $setting = DB::table('settings')->orderBy('created_at','desc')->first();
+
         $factureDetails = MsEbpFactureDetail::where('invoice_number',$invoice_number)->get();
         $facture = MsEbpFacture::with('client')->where('invoice_number',$invoice_number)->first();
         $total_amount = DB::table('ms_ebp_facture_details')
             ->where('invoice_number', '=', $invoice_number)
             ->sum('item_total_amount');
-        return view('backend.pages.musumba_steel.ebp.invoice.show',compact('facture','factureDetails','total_amount'));
+        return view('backend.pages.musumba_steel.ebp.invoice.show',compact('facture','factureDetails','total_amount','setting'));
     }
 
 

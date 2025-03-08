@@ -75,7 +75,7 @@
                                     <td>@if($journal_paie->etat == 0) <span class="badge badge-primary">Encours...</span> @elseif($journal_paie->etat == 1) <span class="badge badge-success">Déjà clôturé</span> @endif</td>
                                     <td>
                                     @if($journal_paie->etat != 1)
-                                        @if (Auth::guard('admin')->user()->can('hr_journal_paie.edit'))
+                                        @if (Auth::guard('admin')->user()->can('hr_journal_paie.cloturer'))
                                         <a class="btn btn-success text-white" href="{{ route('admin.hr-journal-paies.cloturer', $journal_paie->code) }}" title="clôturer le journal de paie" 
                                             onclick="event.preventDefault(); document.getElementById('validate-form-{{ $journal_paie->code }}').submit();">
                                                 clôturer
