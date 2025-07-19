@@ -14,7 +14,7 @@
                     <div class="login-form-head">
                       <!--  <h4>Sign In</h4> -->
                         <p>
-                             <img src="{{ asset('img/musumba1.svg') }}" width="100">
+                             <img src="{{ asset('img/musumba1.svg') }}" width="200">
                         </p>
                     </div>
                     <div class="login-form-body">

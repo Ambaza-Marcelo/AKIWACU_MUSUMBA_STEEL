@@ -58,6 +58,7 @@
                                     <th width="10%">@lang('messages.code')</th>
                                     <th width="10%">@lang('messages.quantity')</th>
                                     <th width="10%">@lang('messages.unit')</th>
+                                    <th width="10%">@lang('CUMP')</th>
                                     <th width="10%">@lang('TVA')</th>
                                     <th width="10%">@lang('messages.selling_price')</th>
                                     <th width="15%">Action</th>
@@ -71,6 +72,7 @@
                                     <td>{{ $article->code }}</td>
                                     <td>{{ $article->quantity }}</td>
                                     <td>{{ $article->unit }}</td>
+                                    <td>{{ number_format($article->cump,0,',',' ') }}</td>
                                     <td>{{ $article->vat }}%</td>
                                     <td>{{ number_format($article->selling_price,0,',',' ') }}</td>
                                     <td>

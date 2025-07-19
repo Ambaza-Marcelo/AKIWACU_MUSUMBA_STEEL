@@ -21,6 +21,7 @@ use App\Models\MsEbpArticle;
 use App\Models\MsEbpClient;
 use App\Models\MsEbpFacture;
 use App\Models\MsEbpFactureDetail;
+use App\Models\MsEbpStockReport;
 use App\Models\Setting;
 use App\Exports\MusumbaSteel\Ebp\FactureExport;
 
@@ -276,6 +277,86 @@ class FactureController extends Controller
 
                 $factureDetail[] = $invoice_items;
             }
+
+
+            $valeurStockInitial = MsEbpArticle::where('id', $data->article_id)->value('total_cump_value');
+            $quantityStockInitial = MsEbpArticle::where('id', $data->article_id)->value('quantity');
+            $cump = MsEbpArticle::where('id', $data->article_id)->value('cump');
+
+            $quantityRestant = $quantityStockInitial - $data->item_quantity;
+                      
+                $reportData = array(
+                    'article_id' => $data->article_id,
+                    'quantity_stock_initial' => $quantityStockInitial,
+                    'value_stock_initial' => $valeurStockInitial,
+                    'quantity_stockin' => $data->item_quantity,
+                    'value_stockin' => $data->item_quantity * $data->item_price,
+                    'quantity_stock_final' => $quantityRestant,
+                    'value_stock_final' => $quantityRestant * $cump,
+                    'date' => $data->invoice_date,
+                    'type_transaction' => 'VENTE',
+                    'document_no' => $data->invoice_number,
+                    'cump' => $cump,
+                    'created_by' => $this->user->name,
+                    'description' => "SORTIE DES ARTICLES APRES VENTE",
+                    'created_at' => \Carbon\Carbon::now()
+                );
+                $report[] = $reportData;
+                
+                    $donnees = array(
+                        'article_id' => $data->article_id,
+                        'quantity' => $quantityRestant,
+                        'total_cump_value' => $quantityRestant * $cump,
+                        'created_by' => $this->user->name,
+                        'verified' => true
+                    );
+                    
+                    if ($data->item_quantity <= $quantityStockInitial) {
+                        
+                        MsEbpArticle::where('id',$data->article_id)
+                        ->update($donnees);
+                        $flag = 0;
+                        
+                        $theUrl = config('app.guzzle_test_url').'/ebms_api/login/';
+                        $response = Http::post($theUrl, [
+                            'username'=> config('app.obr_test_username'),
+                            'password'=> config('app.obr_test_pwd')
+
+                        ]);
+                        $data1 =  json_decode($response);
+                        $data2 = ($data1->result);       
+    
+                        $token = $data2->token;
+
+                        $theUrl = config('app.guzzle_test_url').'/ebms_api/AddStockMovement';  
+                        $response = Http::withHeaders([
+                        'Authorization' => 'Bearer '.$token,
+                        'Accept' => 'application/json'])->post($theUrl, [
+                            'system_or_device_id'=> config('app.obr_test_username'),
+                            'item_code'=> $data->article->code,
+                            'item_designation'=>$data->article->name,
+                            'item_quantity'=>$data->item_quantity,
+                            'item_measurement_unit'=>$data->article->unit,
+                            'item_purchase_or_sale_price'=>$data->cump,
+                            'item_purchase_or_sale_currency'=> "BIF",
+                            'item_movement_type'=> 'SN',
+                            'item_movement_invoice_ref'=> $data->invoice_number,
+                            'item_movement_description'=> 'SORTIES NORMALES DE VENTE DES MARCHANDISES',
+                            'item_movement_date'=> $data->invoice_date,
+
+                        ]);
+                        
+                    }else{   
+
+                         $flag = 1;
+
+                        session()->flash('error', $this->user->name.' ,why do you want selling a quantity that you do not have!');
+                        return redirect()->back();
+                    }
+        }
+
+        if ($flag != 1) {
+            MsEbpStockReport::insert($report);
         }
 
         foreach($factures as $facture){
@@ -318,26 +399,23 @@ class FactureController extends Controller
         }
 
         $dataObr =  json_decode($response);
-        $done = $dataObr->success;
-        
 
+        $done = $dataObr->success;
+        $msg = $dataObr->msg;
 
         if ($done == true) {
-            //$dataObr2 = $dataObr->result;
-            //$invoice_registred_number = $dataObr2->invoice_registred_number;
-            //$invoice_registred_date = $dataObr2->invoice_registred_date;
-            /*
+
+            $electronic_signature = $dataObr->electronic_signature;
+
             MsEbpFacture::where('invoice_number', '=', $invoice_number)
-                ->update(['etat' => 2,'invoice_registred_number' => $invoice_registred_number,'invoice_registred_date' => $invoice_registred_date]);
+                ->update(['etat' => 2,'electronic_signature' => $electronic_signature]);
             MsEbpFactureDetail::where('invoice_number', '=', $invoice_number)
-                ->update(['etat' => 2,'invoice_registred_number' => $invoice_registred_number,'invoice_registred_date' => $invoice_registred_date]);
-            */
-            MsEbpFacture::where('invoice_number', '=', $invoice_number)
-                ->update(['etat' => 2]);
-            MsEbpFactureDetail::where('invoice_number', '=', $invoice_number)
-                ->update(['etat' => 2]);
+                ->update(['etat' => 2,'electronic_signature' => $electronic_signature]);
+
             DB::commit();
-            return $response->json();
+
+            session()->flash('success', 'La facture a été envoyée avec succés!!');
+            return redirect()->route('admin.musumba-steel-facture.index');
 
         }else{
 

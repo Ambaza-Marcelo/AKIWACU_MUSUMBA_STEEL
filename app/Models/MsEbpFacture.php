@@ -29,11 +29,10 @@ class MsEbpFacture extends Model
         'invoice_signature',
         'invoice_signature_date',
         'invoice_signature',
-        'invoice_signature_date',
-        'employe_id',
+        'client_id',
     ];
 
     public function client(){
-        return $this->belongsTo('\App\Models\MsEbpClient');
+        return $this->belongsTo('App\Models\MsEbpClient');
     }
 }

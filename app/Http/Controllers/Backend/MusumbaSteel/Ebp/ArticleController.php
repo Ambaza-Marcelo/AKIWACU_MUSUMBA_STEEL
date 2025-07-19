@@ -71,6 +71,7 @@ class ArticleController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'unit' => 'required|max:20',
+            'purchase_price' => 'required',
             'selling_price' => 'required',
             'quantity' => 'required',
         ]);
@@ -82,8 +83,11 @@ class ArticleController extends Controller
         $article->code = $artCode.date("y").substr(number_format(time() * mt_rand(), 0, '', ''), 0, 6);
         $article->unit = $request->unit;
         $article->purchase_price = $request->purchase_price;
+        $article->cump = $request->purchase_price;
+        $article->total_cump_value = $request->purchase_price;
         $article->selling_price = $request->selling_price;
-        $article->quantity = $request->quantity;
+        $article->quantity = 0;
+        $article->category_id = $request->category_id;
         $article->specification = $request->specification;
         $article->vat = $request->vat;
         $article->expiration_date = $request->expiration_date;
@@ -160,8 +164,10 @@ class ArticleController extends Controller
         $article->name = $request->name;
         $article->unit = $request->unit;
         $article->purchase_price = $request->purchase_price;
+        $article->cump = $request->purchase_price;
+        $article->total_cump_value = $request->purchase_price * $request->quantity;
         $article->selling_price = $request->selling_price;
-        $article->quantity = $request->quantity;
+        $article->category_id = $request->category_id;
         $article->specification = $request->specification;
         $article->vat = $request->vat;
         $article->expiration_date = $request->expiration_date;

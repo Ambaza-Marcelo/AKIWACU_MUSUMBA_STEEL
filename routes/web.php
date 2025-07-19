@@ -21,13 +21,6 @@ Auth::routes();
 
 Route::get('/', 'HomeController@redirectAdmin')->name('index');
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('welcome-to-eden-garden-resort','WelcomeController@list')->name('welcome');
-Route::get('MENU-BOISSONS','WelcomeController@drink')->name('menu-boissons');
-Route::get('SEARCH','WelcomeController@search')->name('search');
-Route::get('MENU-CUISINE','WelcomeController@food')->name('menu-cuisine');
-Route::get('MENU-BARRISTA','WelcomeController@barrista')->name('menu-barrista');
-Route::get('MENU-EDEN-GARDEN','WelcomeController@eden')->name('menu-eden');
-Route::get('SALLES-DE-CONFERENCES','WelcomeController@salle')->name('salle-conferences');
 
 /**
  * Admin routes
@@ -78,86 +71,45 @@ Route::group(['prefix' => 'admin'], function () {
     Route::put('musumba-steel-item-categories/update/{id}', 'Backend\MusumbaSteel\Ebp\CategoryController@update')->name('admin.musumba-steel-item-categories.update');
     Route::delete('musumba-steel-item-categories/destroy/{id}', 'Backend\MusumbaSteel\Ebp\CategoryController@destroy')->name('admin.musumba-steel-item-categories.destroy');
 
+    //stockins routes
+    Route::get('EBMS/stockins/index', 'Backend\MusumbaSteel\Ebp\StockinController@index')->name('admin.stockins.index');
+    Route::get('EBMS/stockins/create', 'Backend\MusumbaSteel\Ebp\StockinController@create')->name('admin.stockins.create');
+    Route::post('EBMS/stockins/store', 'Backend\MusumbaSteel\Ebp\StockinController@store')->name('admin.stockins.store');
+    Route::get('EBMS/stockins/edit/{stockin_no}', 'Backend\MusumbaSteel\Ebp\StockinController@edit')->name('admin.stockins.edit');
+    Route::put('EBMS/stockins/update/{stockin_no}', 'Backend\MusumbaSteel\Ebp\StockinController@update')->name('admin.stockins.update');
+    Route::delete('EBMS/stockins/destroy/{stockin_no}', 'Backend\MusumbaSteel\Ebp\StockinController@destroy')->name('admin.stockins.destroy');
+    Route::get('EBMS/stockins/show/{stockin_no}','Backend\MusumbaSteel\Ebp\StockinController@show')->name('admin.stockins.show');
 
+    Route::get('EBMS/stockins/bonEntree/{stockin_no}','Backend\MusumbaSteel\Ebp\StockinController@bonEntree')->name('admin.stockins.bonEntree');
+    Route::put('EBMS/stockins/validate/{stockin_no}', 'Backend\MusumbaSteel\Ebp\StockinController@validateStockin')->name('admin.stockins.validate');
+    Route::put('EBMS/stockins/reject/{stockin_no}','Backend\MusumbaSteel\Ebp\StockinController@reject')->name('admin.stockins.reject');
+    Route::put('EBMS/stockins/reset/{stockin_no}','Backend\MusumbaSteel\Ebp\StockinController@reset')->name('admin.stockins.reset');
+    Route::put('EBMS/stockins/confirm/{stockin_no}','Backend\MusumbaSteel\Ebp\StockinController@confirm')->name('admin.stockins.confirm');
+    Route::put('EBMS/stockins/approuve/{stockin_no}','Backend\MusumbaSteel\Ebp\StockinController@approuve')->name('admin.stockins.approuve');
 
+    Route::get('EBMS/stockins/export-to-excel','Backend\MusumbaSteel\Ebp\StockinController@exportToExcel')->name('admin.stockins.export-to-excel');
 
-    //ebms_api
-    Route::get('ebms_api/getLogin', 'Backend\FactureController@getLogin')->name('ebms_api.getLogin');
-    Route::get('ebms_api/invoices/index', 'Backend\FactureController@index')->name('ebms_api.invoices.index');
-    Route::get('ebms_api/invoices/list/all', 'Backend\FactureController@listAll')->name('ebms_api.invoices.listAll');
-    Route::get('ebms_api/facture/create/{order_no}', 'Backend\FactureController@create')->name('ebms_api.invoices.create');
-    Route::get('ebms_api/facture/edit/{invoice_number}', 'Backend\FactureController@edit')->name('ebms_api.invoices.edit');
-    Route::post('eBMS-facture-boisson/store', 'Backend\FactureController@storeDrink')->name('ebms_api-facture-boisson.store');
-    Route::post('eBMS-facture-barrist/store', 'Backend\FactureController@storeBarrist')->name('ebms_api-facture-barrist.store');
-    Route::post('eBMS-facture-bartender/store', 'Backend\FactureController@storeBartender')->name('ebms_api-facture-bartender.store');
-    Route::post('eBMS-facture-cuisine/store', 'Backend\FactureController@storeFood')->name('ebms_api-facture-cuisine.store');
-    Route::put('eBMS-facture-cuisine/update/{invoice_number}', 'Backend\FactureRestaurantController@update')->name('ebms_api-facture-cuisine.update');
-    Route::post('eBMS-facture-booking/store', 'Backend\FactureController@storeBooking')->name('ebms_api-facture-booking.store');
-    Route::put('eBMS-facture-boisson/update/{invoice_number}', 'Backend\FactureController@update')->name('ebms_api-facture-boisson.update');
+    //stockouts routes
+    Route::get('EBMS/stockouts/index', 'Backend\MusumbaSteel\Ebp\StockoutController@index')->name('admin.stockouts.index');
+    Route::get('EBMS/stockouts/create', 'Backend\MusumbaSteel\Ebp\StockoutController@create')->name('admin.stockouts.create');
+    Route::post('EBMS/stockouts/store', 'Backend\MusumbaSteel\Ebp\StockoutController@store')->name('admin.stockouts.store');
+    Route::get('EBMS/stockouts/edit/{stockin_no}', 'Backend\MusumbaSteel\Ebp\StockoutController@edit')->name('admin.stockouts.edit');
+    Route::put('EBMS/stockouts/update/{stockin_no}', 'Backend\MusumbaSteel\Ebp\StockoutController@update')->name('admin.stockouts.update');
+    Route::delete('EBMS/stockouts/destroy/{stockin_no}', 'Backend\MusumbaSteel\Ebp\StockoutController@destroy')->name('admin.stockouts.destroy');
+    Route::get('EBMS/stockouts/show/{stockin_no}','Backend\MusumbaSteel\Ebp\StockoutController@show')->name('admin.stockouts.show');
 
-    Route::delete('ebms_api/facture/destroy/{invoice_number}', 'Backend\FactureController@destroy')->name('ebms_api.destroy');
-    Route::put('eBms/facture-boisson/valider-facture/{invoice_number}','Backend\FactureController@validerFactureBoisson')->name('admin.facture-boisson.validate');
-    Route::put('eBms/facture-cuisine/valider-facture/{invoice_number}','Backend\FactureController@validerFactureCuisine')->name('admin.facture-cuisine.validate');
-    Route::put('eBms/facture-barrist/valider-facture/{invoice_number}','Backend\FactureController@validerFactureBarrist')->name('admin.facture-barrist.validate');
-    Route::put('eBms/facture-bartender/valider-facture/{invoice_number}','Backend\FactureController@validerFactureBartender')->name('admin.facture-bartender.validate');
-    Route::put('eBms/facture-booking/valider-facture/{invoice_number}','Backend\FactureController@validerFactureBooking')->name('admin.facture-booking.validate');
+    Route::get('EBMS/stockouts/bonSortie/{stockin_no}','Backend\MusumbaSteel\Ebp\StockoutController@bonSortie')->name('admin.stockouts.bonSortie');
+    Route::put('EBMS/stockouts/validate/{stockin_no}', 'Backend\MusumbaSteel\Ebp\StockoutController@validateStockout')->name('admin.stockouts.validate');
+    Route::put('EBMS/stockouts/reject/{stockin_no}','Backend\MusumbaSteel\Ebp\StockoutController@reject')->name('admin.stockouts.reject');
+    Route::put('EBMS/stockouts/reset/{stockin_no}','Backend\MusumbaSteel\Ebp\StockoutController@reset')->name('admin.stockouts.reset');
+    Route::put('EBMS/stockouts/confirm/{stockin_no}','Backend\MusumbaSteel\Ebp\StockoutController@confirm')->name('admin.stockouts.confirm');
+    Route::put('EBMS/stockouts/approuve/{stockin_no}','Backend\MusumbaSteel\Ebp\StockoutController@approuve')->name('admin.stockouts.approuve');
 
+    Route::get('EBMS/stockouts/export-to-excel','Backend\MusumbaSteel\Ebp\StockoutController@exportToExcel')->name('admin.stockouts.export-to-excel');
 
-
-    Route::get('EBMS/voir-facture-a-valider/{invoice_number}','Backend\FactureController@voirFactureCredit')->name('admin.voir-facture.credit');
-
-    Route::put('eBms/facture-boisson/valider-facture-a-credit/{invoice_number}','Backend\FactureController@validerFactureBoissonCredit')->name('admin.facture-boisson.valider-credit');
-    Route::put('eBms/facture-cuisine/valider-facture-a-credit/{invoice_number}','Backend\FactureController@validerFactureCuisineCredit')->name('admin.facture-cuisine.valider-credit');
-    Route::put('eBms/facture-barrist/valider-facture-a-credit/{invoice_number}','Backend\FactureController@validerFactureBarristCredit')->name('admin.facture-barrist.valider-credit');
-    Route::put('eBms/facture-bartender/valider-facture-a-credit/{invoice_number}','Backend\FactureController@validerFactureBartenderCredit')->name('admin.facture-bartender.valider-credit');
-    Route::put('eBms/facture-booking/valider-facture-a-credit/{invoice_number}','Backend\FactureController@validerFactureBookingCredit')->name('admin.facture-booking.valider-credit');
-
-
-    Route::get('EBMS/voir-facture-a-credit','Backend\FactureRestaurantController@voirFactureAcredit')->name('admin.credit-invoices.list');
-    Route::get('EBMS/payer-facture-a-credit/{invoice_number}','Backend\FactureRestaurantController@voirFacturePayercredit')->name('admin.payer-facture.credit');
-
-    Route::get('EBMS/voir-facture-credit-payes','Backend\FactureRestaurantController@creditPayes')->name('admin.credit-payes.list');
-
-    Route::get('EBMS/exporter-en-excel-facture-credits','Backend\FactureRestaurantController@creditExportToExcel')->name('admin.exporter-en-excel-credits');
-    Route::get('EBMS/exporter-en-excel-facture-recouvres','Backend\FactureRestaurantController@recouvrementExportToExcel')->name('admin.exporter-en-excel-recouvrement');
-
-    Route::get('EBMS/voir-chiffre-affaires','Backend\FactureRestaurantController@chiffreAffaire')->name('admin.voir-chiffre-affaires');
-    Route::get('EBMS/exporter-chiffre-affaire','Backend\FactureRestaurantController@exporterChiffreAffaire')->name('admin.exporter-chiffre-affaire');
-    Route::get('EBMS/facture-globale/client','Backend\FactureRestaurantController@factureGlobale')->name('admin.facture-globale.client');
-    Route::get('EBMS/exporter-en-excel-chiffre-affaire','Backend\FactureRestaurantController@exporterChiffreAffaireEnExcel')->name('admin.exporter-en-excel-chiffre-affaire');
-    Route::get('EBMS/exporter-en-excel-credit','Backend\FactureRestaurantController@exporterCreditEnExcel')->name('admin.exporter-en-excel-credit');
-    Route::get('EBMS/exporter-en-excel-cash','Backend\FactureRestaurantController@exporterCashEnExcel')->name('admin.exporter-en-excel-cash');
-
-    Route::get('EBMS/exporter-facture-annule','Backend\FactureRestaurantController@exporterFactureAnnule')->name('admin.exporter-facture-annule');
-    Route::get('EBMS/exporter-facture-encours','Backend\FactureRestaurantController@exporterFactureEncours')->name('admin.exporter-facture-encours');
-
-    Route::put('eBms/payer-facture-a-credit/{invoice_number}','Backend\FactureController@payerCredit')->name('admin.facture-credit.payer');
-    Route::put('eBms/valider-facture-paye','Backend\FactureRestaurantController@validerPaye')->name('admin.valider-facture-paye');
-
-
-    Route::get('EBMS/voir-facture-a-annuler/{invoice_number}','Backend\FactureController@voirFactureAnnuler')->name('admin.voir-facture.reset');
-    Route::put('EBMS/facture/annuler-facture/{invoice_number}','Backend\FactureController@annulerFacture')->name('admin.facture.reset');
-    Route::put('EBMS/facture/valider-annuler-facture/{invoice_number}','Backend\FactureController@validerAnnulerFacture')->name('admin.facture.validate-reset');
-    Route::get('EBMS/facture/imprimer/{invoice_number}','Backend\FactureController@facture')->name('admin.facture.imprimer');
-    Route::get('EBMS/facture-brouillon/imprimer/{invoice_number}','Backend\FactureController@factureBrouillon')->name('admin.facture-brouillon.imprimer');
-    Route::get('EBMS/facture/show/{invoice_number}','Backend\FactureController@show')->name('admin.facture.show');
-
-    Route::get('ebms_api/ajouter-facture/{invoice_number}', 'Backend\FactureController@transfer')->name('ebms_api.transfer');
-    Route::get('ebms_api/annuler-facture/{invoice_number}', 'Backend\FactureController@getCancelInvoice')->name('admin.facture.cancel');
-
-    Route::get('EBMS/rapport-facture-credit','Backend\FactureRestaurantController@rapportCredit')->name('admin.rapport-facture-credit');
-    Route::get('EBMS/rapport-facture-credit-paye','Backend\FactureRestaurantController@rapportCreditPaye')->name('admin.rapport-facture-credit-paye');
-
-    Route::get('EBMS/facture-rapport-boisson','Backend\FactureController@rapportBoisson')->name('admin.facture-rapport.boisson');
-    Route::get('EBMS/facture-rapport-nourriture','Backend\FactureRestaurantController@rapportNourriture')->name('admin.facture-rapport.nourriture');
-    Route::get('EBMS/facture-rapport-barrist','Backend\FactureBarristController@rapportBarrist')->name('admin.facture-rapport.barrist');
-    Route::get('EBMS/facture-rapport-bartender','Backend\FactureBartenderController@rapportBartender')->name('admin.facture-rapport.bartender');
-    Route::get('EBMS/facture-rapport-reservation','Backend\FactureBookingController@rapportReservation')->name('admin.facture-rapport.reservation');
-
-    Route::get('EBMS/transfert-rapport-boisson','Backend\DrinkTransferController@rapportBoisson')->name('admin.transfert-rapport.boisson');
-    Route::get('EBMS/reception-rapport-boisson','Backend\DrinkReceptionController@rapportBoisson')->name('admin.reception-rapport.boisson');
-
-
+    //movement stock report routes
+    Route::get('EBMS/stock-movement/index','Backend\MusumbaSteel\Ebp\StockReportController@index')->name('admin.stock-movement.index');
+    Route::get('EBMS/stock-movement/export-to-excel','Backend\MusumbaSteel\Ebp\StockReportController@exportToExcel')->name('admin.stock-movement.export-to-excel');
 
     // Login Routes
     Route::get('/login', 'Backend\Auth\LoginController@showLoginForm')->name('admin.login');
@@ -1290,88 +1242,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::put('EBMS/material-stockouts/reset/{stockout_no}','Backend\MaterialStockoutController@reset')->name('admin.material-stockouts.reset');
     Route::put('EBMS/material-stockouts/confirm/{stockout_no}','Backend\MaterialStockoutController@confirm')->name('admin.material-stockouts.confirm');
     Route::put('EBMS/material-stockouts/approuve/{stockout_no}','Backend\MaterialStockoutController@approuve')->name('admin.material-stockouts.approuve');
-
-    //drink stockouts routes
-    Route::get('EBMS/drink-stockouts/index', 'Backend\DrinkStockoutController@index')->name('admin.drink-stockouts.index');
-    Route::get('EBMS/drink-stockouts/create', 'Backend\DrinkStockoutController@create')->name('admin.drink-stockouts.create');
-    Route::post('EBMS/drink-stockouts/store', 'Backend\DrinkStockoutController@store')->name('admin.drink-stockouts.store');
-    Route::get('EBMS/drink-stockouts/edit/{stockout_no}', 'Backend\DrinkStockoutController@edit')->name('admin.drink-stockouts.edit');
-    Route::put('EBMS/drink-stockouts/update/{stockout_no}', 'Backend\DrinkStockoutController@update')->name('admin.drink-stockouts.update');
-    Route::delete('EBMS/drink-stockouts/destroy/{stockout_no}', 'Backend\DrinkStockoutController@destroy')->name('admin.drink-stockouts.destroy');
-    Route::get('EBMS/drink-stockouts/show/{stockout_no}','Backend\DrinkStockoutController@show')->name('admin.drink-stockouts.show');
-
-    Route::get('EBMS/drink-stockouts/bonSortie/{stockout_no}','Backend\DrinkStockoutController@bonSortie')->name('admin.drink-stockouts.bonSortie');
-    Route::put('EBMS/drink-stockouts/validate/{stockout_no}', 'Backend\DrinkStockoutController@validateStockout')->name('admin.drink-stockouts.validate');
-    Route::put('EBMS/drink-stockouts/reject/{stockout_no}','Backend\DrinkStockoutController@reject')->name('admin.drink-stockouts.reject');
-    Route::put('EBMS/drink-stockouts/reset/{stockout_no}','Backend\DrinkStockoutController@reset')->name('admin.drink-stockouts.reset');
-    Route::put('EBMS/drink-stockouts/confirm/{stockout_no}','Backend\DrinkStockoutController@confirm')->name('admin.drink-stockouts.confirm');
-    Route::put('EBMS/drink-stockouts/approuve/{stockout_no}','Backend\DrinkStockoutController@approuve')->name('admin.drink-stockouts.approuve');
-    Route::get('EBMS/drink-stockouts/export-to-excel','Backend\DrinkStockoutController@exportToExcel')->name('admin.drink-stockouts.export-to-excel');
-
-
-    //private-drink stockouts routes
-    Route::get('PDG/private-drink-stockouts/index', 'Backend\PrivateDrinkStockoutController@index')->name('admin.private-drink-stockouts.index');
-    Route::get('PDG/private-drink-stockouts/create', 'Backend\PrivateDrinkStockoutController@create')->name('admin.private-drink-stockouts.create');
-    Route::post('PDG/private-drink-stockouts/store', 'Backend\PrivateDrinkStockoutController@store')->name('admin.private-drink-stockouts.store');
-    Route::delete('PDG/private-drink-stockouts/destroy/{stockout_no}', 'Backend\PrivateDrinkStockoutController@destroy')->name('admin.private-drink-stockouts.destroy');
-    Route::get('PDG/private-drink-stockouts/show/{stockout_no}','Backend\PrivateDrinkStockoutController@show')->name('admin.private-drink-stockouts.show');
-
-    Route::get('PDG/private-drink-stockouts/bonSortie/{stockout_no}','Backend\PrivateDrinkStockoutController@bonSortie')->name('admin.private-drink-stockouts.bonSortie');
-    Route::put('PDG/private-drink-stockouts/validate/{stockout_no}', 'Backend\PrivateDrinkStockoutController@validateStockout')->name('admin.private-drink-stockouts.validate');
-    Route::put('PDG/private-drink-stockouts/reject/{stockout_no}','Backend\PrivateDrinkStockoutController@reject')->name('admin.private-drink-stockouts.reject');
-    Route::put('PDG/private-drink-stockouts/reset/{stockout_no}','Backend\PrivateDrinkStockoutController@reset')->name('admin.private-drink-stockouts.reset');
-    Route::put('PDG/private-drink-stockouts/confirm/{stockout_no}','Backend\PrivateDrinkStockoutController@confirm')->name('admin.private-drink-stockouts.confirm');
-    Route::put('PDG/private-drink-stockouts/approuve/{stockout_no}','Backend\PrivateDrinkStockoutController@approuve')->name('admin.private-drink-stockouts.approuve');
-
-    Route::get('PDG/private-drink-stockouts/export-to-excel','Backend\PrivateDrinkStockoutController@exportToExcel')->name('admin.private-drink-stockouts.export-to-excel');
-
-    //food stockouts routes
-    Route::get('EBMS/food-stockouts/index', 'Backend\FoodStockoutController@index')->name('admin.food-stockouts.index');
-    Route::get('EBMS/food-stockouts/create', 'Backend\FoodStockoutController@create')->name('admin.food-stockouts.create');
-    Route::post('EBMS/food-stockouts/store', 'Backend\FoodStockoutController@store')->name('admin.food-stockouts.store');
-    Route::get('EBMS/food-stockouts/edit/{stockout_no}', 'Backend\FoodStockoutController@edit')->name('admin.food-stockouts.edit');
-    Route::put('EBMS/food-stockouts/update/{stockout_no}', 'Backend\FoodStockoutController@update')->name('admin.food-stockouts.update');
-    Route::delete('EBMS/food-stockouts/destroy/{stockout_no}', 'Backend\FoodStockoutController@destroy')->name('admin.food-stockouts.destroy');
-    Route::get('EBMS/food-stockouts/show/{stockout_no}','Backend\FoodStockoutController@show')->name('admin.food-stockouts.show');
-
-    Route::get('EBMS/food-stockouts/bonSortie/{stockout_no}','Backend\FoodStockoutController@bonSortie')->name('admin.food-stockouts.bonSortie');
-    Route::put('EBMS/food-stockouts/validate/{stockout_no}', 'Backend\FoodStockoutController@validateStockout')->name('admin.food-stockouts.validate');
-    Route::put('EBMS/food-stockouts/reject/{stockout_no}','Backend\FoodStockoutController@reject')->name('admin.food-stockouts.reject');
-    Route::put('EBMS/food-stockouts/reset/{stockout_no}','Backend\FoodStockoutController@reset')->name('admin.food-stockouts.reset');
-    Route::put('EBMS/food-stockouts/confirm/{stockout_no}','Backend\FoodStockoutController@confirm')->name('admin.food-stockouts.confirm');
-    Route::put('EBMS/food-stockouts/approuve/{stockout_no}','Backend\FoodStockoutController@approuve')->name('admin.food-stockouts.approuve');
-
-    Route::get('EBMS/food-stockouts/export-to-pdf', 'Backend\FoodStockoutController@exportTopdf')->name('admin.food-stockouts.export-to-pdf');
-
-    //drink extra big store report routes
-    Route::get('EBMS/drink-extra-big-store-report/index','Backend\DrinkExtraBigReportController@index')->name('admin.drink-extra-big-store-report.index');
-    Route::get('EBMS/drink-extra-big-store-report/export-to-pdf','Backend\DrinkExtraBigReportController@exportToPdf')->name('admin.drink-extra-big-store-report.export-to-pdf');
-    Route::get('EBMS/drink-extra-big-store-report/export-to-excel','Backend\DrinkExtraBigReportController@exportToExcel')->name('admin.drink-extra-big-store-report.export-to-excel');
-
-    //drink big store report routes
-    Route::get('EBMS/drink-big-store-report/index','Backend\DrinkBigReportController@index')->name('admin.drink-big-store-report.index');
-    Route::get('EBMS/drink-big-store-report/export-to-pdf','Backend\DrinkBigReportController@exportToPdf')->name('admin.drink-big-store-report.export-to-pdf');
-    Route::get('EBMS/drink-big-store-report/export-to-excel','Backend\DrinkBigReportController@exportToExcel')->name('admin.drink-big-store-report.export-to-excel');
-
-    //drink small store report routes
-    Route::get('EBMS/drink-small-store-report/index','Backend\DrinkSmallReportController@index')->name('admin.drink-small-store-report.index');
-    Route::get('EBMS/drink-small-store-report/export-to-pdf','Backend\DrinkSmallReportController@exportToPdf')->name('admin.drink-small-store-report.export-to-pdf');
-    Route::get('EBMS/drink-small-store-report/export-to-excel','Backend\DrinkSmallReportController@exportToExcel')->name('admin.drink-small-store-report.export-to-excel');
-
-    //food extra big store report routes
-    Route::get('EBMS/food-extra-big-store-report/index','Backend\FoodExtraBigReportController@index')->name('admin.food-extra-big-store-report.index');
-    Route::get('EBMS/food-extra-big-store-report/export-to-pdf','Backend\FoodExtraBigReportController@exportToPdf')->name('admin.food-extra-big-store-report.export-to-pdf');
-    Route::get('EBMS/food-extra-big-store-report/export-to-excel','Backend\FoodExtraBigReportController@exportToExcel')->name('admin.food-extra-big-store-report.export-to-excel');
-    //food big store report routes
-    Route::get('EBMS/food-big-store-report/index','Backend\FoodBigReportController@index')->name('admin.food-big-store-report.index');
-    Route::get('EBMS/food-big-store-report/export-to-pdf','Backend\FoodBigReportController@exportToPdf')->name('admin.food-big-store-report.export-to-pdf');
-    Route::get('EBMS/food-big-store-report/export-to-excel','Backend\FoodBigReportController@exportToExcel')->name('admin.food-big-store-report.export-to-excel');
-
-    //food small store report routes
-    Route::get('EBMS/food-small-store-report/index','Backend\FoodSmallReportController@index')->name('admin.food-small-store-report.index');
-    Route::get('EBMS/food-small-store-report/export-to-pdf','Backend\FoodSmallReportController@exportToPdf')->name('admin.food-small-store-report.export-to-pdf');
-    Route::get('EBMS/food-small-store-report/export-to-excel','Backend\FoodSmallReportController@exportToExcel')->name('admin.food-small-store-report.export-to-excel');
-
 
     //material extra big store report routes
     Route::get('EBMS/material-extra-big-store-report/index','Backend\MaterialExtraBigReportController@index')->name('admin.material-extra-big-store-report.index');

@@ -74,7 +74,7 @@ class PaiementController extends Controller
 
         $journal_paie = HrJournalPaie::where('etat', 0)->first();
         $employes = HrEmploye::where('company_id',$company_id)->whereNotIn('id', function($q){
-        $q->select('employe_id')->where('code','0010')->where('employe_id','!=','')->from('hr_paiements');
+        $q->select('employe_id')->where('code','0017')->where('employe_id','!=','')->from('hr_paiements');
         })->orderBy('firstname')->get();
         
 
@@ -161,7 +161,7 @@ class PaiementController extends Controller
                 $inss_employeur = ($plafond_cotisation * 6)/100;
             }
 
-            if ($salaire_brut < 250000) {
+            if ($salaire_brut < 270000) {
                 $assurance_maladie_employe = 0;
                 $assurance_maladie_employeur = 27500;
             }else{
@@ -382,7 +382,7 @@ class PaiementController extends Controller
                 $inss_employeur = ($plafond_cotisation * 6)/100;
             }
 
-            if ($salaire_brut < 250000) {
+            if ($salaire_brut < 270000) {
                 $assurance_maladie_employe = 0;
                 $assurance_maladie_employeur = 27500;
             }else{

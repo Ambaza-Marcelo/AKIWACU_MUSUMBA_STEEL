@@ -102,7 +102,7 @@
                                     <td><a href="{{ route('admin.musumba-steel-facture.show',$facture->invoice_number) }}">{{ $facture->invoice_number }}</a>&nbsp;@if($facture->etat == 0)<span class="badge badge-warning">Encours...</span>@elseif($facture->etat === '1')<span class="badge badge-success">Validée</span>@elseif($facture->etat ==2)<span class="badge badge-success">Envoyée</span>@elseif($facture->etat === '01')<span class="badge badge-info" title="{{ $facture->customer_name }}">validé(crédit)</span>@else<span class="badge badge-danger" title="{{ $facture->cn_motif }}">Annulée</span>@endif</td>
                                     <td>{{ \Carbon\Carbon::parse($facture->invoice_date)->format('d/m/Y') }}</td>
                                     <td>{{ $facture->tp_trade_number }}</td>
-                                    <td>@if($facture->client_id){{ $facture->client->customer_name }}  @endif</td>
+                                    <td>@if($facture->client_id){{ $facture->client->customer_name }} @endif</td>
                                     <td>@if($facture->client_id){{ $facture->client->customer_TIN }} @endif</td>
                                     <td>@if($facture->client_id){{ $facture->client->customer_address }} @endif</td>
                                     <td>{{ $facture->invoice_signature }}</td>

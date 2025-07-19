@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class MsEbpClient extends Model
 {
     //
+    protected $table = 'ms_ebp_clients';
     protected $fillable = [
     	'customer_name',
 		'telephone',

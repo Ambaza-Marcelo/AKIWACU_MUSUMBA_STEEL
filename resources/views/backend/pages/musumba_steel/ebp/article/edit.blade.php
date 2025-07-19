@@ -59,8 +59,9 @@
                                     <label for="unit">@lang('messages.unit')<strong style="color: red;">*</strong></label>
                                     <select class="form-control" name="unit" id="unit">
                                         <option disabled="disabled" selected="selected">Merci de choisir</option>
-                                        <option value="pieces" class="form-control">Pieces</option>
-                                        <option value="autres" class="form-control">Autres</option>
+                                        <option value="PCS" class="form-control" {{ $article->unit == 'PCS' ? 'selected' : '' }}>PCS</option>
+                                        <option value="SACS" class="form-control" {{ $article->unit == 'SACS' ? 'selected' : '' }}>SACS</option>
+                                        <option value="autres" class="form-control" {{ $article->unit == 'Autres' ? 'selected' : '' }}>Autres</option>
                                     </select>
                                 </div>
                             </div>
@@ -69,7 +70,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="quantity">@lang('messages.quantity')</label>
-                                    <input type="number" class="form-control" id="quantity" name="quantity" value="{{ $article->quantity }}" min="0">
+                                    <input type="number" class="form-control" id="quantity" name="quantity" value="{{ $article->quantity }}" min="0" readonly>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -116,9 +117,9 @@
                                     <label for="vat">@lang('Taux TVA')</label>
                                     <select class="form-control" name="vat" id="vat" required>
                                         <option disabled="disabled" selected="selected">Merci de choisir</option>
-                                        <option value="0" class="form-control">0%</option>
-                                        <option value="10" class="form-control">10%</option>
-                                        <option value="18" class="form-control">18%</option>
+                                        <option value="0" class="form-control" {{ $article->vat == 0 ? 'selected' : '' }}>0%</option>
+                                        <option value="10" class="form-control" {{ $article->vat == 10 ? 'selected' : '' }}>10%</option>
+                                        <option value="18" class="form-control" {{ $article->vat == 10 ? 'selected' : '' }}>18%</option>
                                     </select>
                                 </div>
                             </div>

@@ -19,47 +19,7 @@
                         <a href="{{ route('admin.dashboard') }}" aria-expanded="true"><i class="ti-dashboard"></i><span>@lang('messages.dashboard')</span></a>
                     </li>
                     @endif
-                    @if ($usr->can('admin.create') || $usr->can('admin.view') ||  $usr->can('admin.edit') ||  $usr->can('admin.delete'))
-                    <li>
-                        <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-user"></i><span>
-                            @lang('messages.users')
-                        </span></a>
-                        <ul class="collapse {{ Route::is('admin.admins.create') || Route::is('admin.admins.index') || Route::is('admin.admins.edit') || Route::is('admin.admins.show') ? 'in' : '' }}">
-                            
-                            @if ($usr->can('admin.view'))
-                                <li class="{{ Route::is('admin.admins.index')  || Route::is('admin.admins.edit') ? 'active' : '' }}"><a href="{{ route('admin.admins.index') }}"><i class="fa fa-user"></i>&nbsp;@lang('messages.users')</a></li>
-                            @endif
-                            @if ($usr->can('role.view'))
-                                <li class="{{ Route::is('admin.roles.index')  || Route::is('admin.roles.edit') ? 'active' : '' }}"><a href="{{ route('admin.roles.index') }}"><i class="fa fa-tasks"></i> &nbsp;@lang('messages.roles') & @lang('messages.permissions')</a></li>
-                            @endif
-                        </ul>
-                    </li>
-                    @endif
-                    @if($usr->can('setting.view'))
-                    <li class=""><a href="{{ route('admin.settings.index') }}"><i class="fa fa-cogs"></i><span>@lang('messages.setting')</a></li>
-                    @endif
-                    <hr>
-                    @if ( $usr->can('musumba_steel_facture.create') || $usr->can('musumba_steel_facture.view') ||  $usr->can('musumba_steel_facture.edit') ||  $usr->can('musumba_steel_facture.delete') ||  $usr->can('musumba_steel_facture.validate') ||  $usr->can('musumba_steel_facture.confirm') ||  $usr->can('musumba_steel_facture.send') ||  $usr->can('musumba_steel_facture.approuve'))
-                    <li>
-                        <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-shopping-cart"></i><span>
-                            @lang('MUSUMBA FACTURES')
-                        </span></a>
-                        <ul class="collapse">
-                                @if ($usr->can('musumba_steel_facture.view'))
-                                <li class=""><a href="{{ route('admin.musumba-steel-item-categories.index') }}"><i class="fa fa-first-order"></i>&nbsp;@lang('Categories')</a></li>
-                                @endif 
-                                @if ($usr->can('musumba_steel_facture.view'))
-                                <li class=""><a href="{{ route('admin.musumba-steel-items.index') }}"><i class="fa fa-first-order"></i>&nbsp;@lang('Articles')</a></li>
-                                @endif
-                                @if ($usr->can('client.view'))
-                                <li class=""><a href="{{ route('admin.musumba-steel-clients.index') }}"><i class="fa fa-first-order"></i>&nbsp;@lang('Clients')</a></li>
-                                @endif
-                                @if ($usr->can('musumba_steel_facture.view'))
-                                <li class=""><a href="{{ route('admin.musumba-steel-facture.index') }}"><i class="fa fa-first-order"></i>&nbsp;@lang('Factures')</a></li>
-                                @endif
-                        </ul>
-                    </li>
-                    @endif
+                    
                     @if ($usr->can('musumba_steel_car.create') || $usr->can('musumba_steel_car.view') ||  $usr->can('musumba_steel_car.edit') ||  $usr->can('musumba_steel_car.delete') || $usr->can('musumba_steel_material_supplier.create') || $usr->can('musumba_steel_material_supplier.view') ||  $usr->can('musumba_steel_material_supplier.edit') ||  $usr->can('musumba_steel_fuel_supplier.view'))
                     <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-shopping-basket"></i><span>
@@ -94,6 +54,43 @@
                                 @endif
                                 @if($usr->can('musumba_steel_index_pump.view'))
                                 <li class=""><a href="{{ route('admin.ms-fuel-index-pumps.index') }}"><i class="fa fa-male"></i>&nbsp;@lang('Index Pump')</a></li>
+                                @endif
+                        </ul>
+                    </li>
+                    @endif
+                    @if ( $usr->can('musumba_steel_facture.create') || $usr->can('musumba_steel_facture.view') ||  $usr->can('musumba_steel_facture.edit') ||  $usr->can('musumba_steel_facture.delete') ||  $usr->can('musumba_steel_facture.validate') ||  $usr->can('musumba_steel_facture.confirm') ||  $usr->can('musumba_steel_facture.send') ||  $usr->can('musumba_steel_facture.approuve'))
+                    <li>
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-shopping-cart"></i><span>
+                            @lang('FACTURATION')
+                        </span></a>
+                        <ul class="collapse">
+                                @if ($usr->can('musumba_steel_facture.view'))
+                                <li class=""><a href="{{ route('admin.musumba-steel-item-categories.index') }}"><i class="fa fa-first-order"></i>&nbsp;@lang('Categories')</a></li>
+                                @endif 
+                                @if ($usr->can('musumba_steel_facture.view'))
+                                <li class=""><a href="{{ route('admin.musumba-steel-items.index') }}"><i class="fa fa-first-order"></i>&nbsp;@lang('Articles')</a></li>
+                                @endif
+                                @if ($usr->can('client.view'))
+                                <li class=""><a href="{{ route('admin.musumba-steel-clients.index') }}"><i class="fa fa-first-order"></i>&nbsp;@lang('Clients')</a></li>
+                                @endif
+                                @if ($usr->can('musumba_steel_facture.view'))
+                                <li class=""><a href="{{ route('admin.musumba-steel-facture.index') }}"><i class="fa fa-first-order"></i>&nbsp;@lang('Factures')</a></li>
+                                @endif
+                                @if ($usr->can('musumba_steel_facture.view'))
+                                <li class=""><a href="{{ route('admin.stock-movement.index') }}"><i class="fa fa-first-order"></i>&nbsp;@lang('Mouvement Stock')</a></li>
+                                @endif
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-list"></i><span>
+                            @lang('messages.stockin') / @lang('messages.stockout')
+                        </span></a>
+                        <ul class="collapse">
+                                @if($usr->can('musumba_steel_facture.view'))
+                                <li class=""><a href="{{ route('admin.stockins.index') }}"><i class="fa fa-male"></i>&nbsp;@lang('Entree')</a></li>
+                                @endif
+                                @if($usr->can('musumba_steel_facture.view'))
+                                <li class=""><a href="{{ route('admin.stockouts.index') }}"><i class="fa fa-male"></i>&nbsp;@lang('Sortie')</a></li>
                                 @endif
                         </ul>
                     </li>
@@ -322,6 +319,25 @@
                     </li>
                     @endif
                     <!-- end musumba steel menu -->
+                    @if ($usr->can('admin.create') || $usr->can('admin.view') ||  $usr->can('admin.edit') ||  $usr->can('admin.delete'))
+                    <li>
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-user"></i><span>
+                            @lang('messages.users')
+                        </span></a>
+                        <ul class="collapse {{ Route::is('admin.admins.create') || Route::is('admin.admins.index') || Route::is('admin.admins.edit') || Route::is('admin.admins.show') ? 'in' : '' }}">
+                            
+                            @if ($usr->can('admin.view'))
+                                <li class="{{ Route::is('admin.admins.index')  || Route::is('admin.admins.edit') ? 'active' : '' }}"><a href="{{ route('admin.admins.index') }}"><i class="fa fa-user"></i>&nbsp;@lang('messages.users')</a></li>
+                            @endif
+                            @if ($usr->can('role.view'))
+                                <li class="{{ Route::is('admin.roles.index')  || Route::is('admin.roles.edit') ? 'active' : '' }}"><a href="{{ route('admin.roles.index') }}"><i class="fa fa-tasks"></i> &nbsp;@lang('messages.roles') & @lang('messages.permissions')</a></li>
+                            @endif
+                        </ul>
+                    </li>
+                    @endif
+                    @if($usr->can('setting.view'))
+                    <li class=""><a href="{{ route('admin.settings.index') }}"><i class="fa fa-cogs"></i><span>@lang('messages.setting')</a></li>
+                    @endif
                 </ul>
             </nav>
         </div>

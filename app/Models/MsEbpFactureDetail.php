@@ -40,6 +40,7 @@ class MsEbpFactureDetail extends Model
         'item_price_wvat',
         'item_total_amount',
         'article_id',
+        'client_id'
     ];
 
     public function client(){

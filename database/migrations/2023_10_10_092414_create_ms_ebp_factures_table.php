@@ -64,7 +64,7 @@ class CreateMsEbpFacturesTable extends Migration
             $table->string('statut')->nullable(true);
             $table->string('statut_paied')->nullable(true);
             $table->string('reste_credit')->nullable(true);
-            $table->bigInteger('employe_id')->unsigned()->nullable(true);
+            $table->string('employe_id')->nullable(true);
             $table->bigInteger('client_id')->unsigned()->nullable(true);
             $table->foreign('client_id')
                     ->references('id')

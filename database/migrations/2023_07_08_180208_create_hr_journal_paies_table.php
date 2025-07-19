@@ -39,8 +39,6 @@ class CreateHrJournalPaiesTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::dropIfExists('hr_journal_paies');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

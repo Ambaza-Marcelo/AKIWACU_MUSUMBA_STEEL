@@ -36,4 +36,16 @@ class MsEbpArticle extends Model
         return $this->hasMany('App\Models\MsEbpFactureDetail','article_id');
     }
 
+    public function stockinDetail(){
+        return $this->hasMany('App\Models\MsEbpStockinDetail','article_id');
+    }
+
+    public function stockoutDetail(){
+        return $this->hasMany('App\Models\MsEbpStockoutDetail','article_id');
+    }
+
+    public function stockReport(){
+        return $this->hasMany('App\Models\MsEbpStockReport','article_id');
+    }
+
 }

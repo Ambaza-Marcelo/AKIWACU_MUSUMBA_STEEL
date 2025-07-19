@@ -25,7 +25,7 @@ class CreateMsEbpArticlesTable extends Migration
             $table->string('unit')->nullable(true);
             $table->string('unit_price')->nullable(true);
             $table->string('purchase_price')->nullable(true);
-            $table->string('cost_price')->nullable(true);
+            $table->string('total_cump_value')->nullable(true);
             $table->string('selling_price')->nullable(true);
             $table->string('cump')->nullable(true);
             $table->string('threshold_quantity')->nullable(true);

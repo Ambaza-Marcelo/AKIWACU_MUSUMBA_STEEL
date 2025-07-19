@@ -135,13 +135,13 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="retenue_pret">@lang('Retenue Prêt')</label>
-                                <input type="number" class="form-control" name="retenue_pret" value="{{ $data->retenue_pret }}" min="0" required>
+                                <input type="number" class="form-control" name="retenue_pret" value="{{ $data->retenue_pret }}" min="0" step="any" required>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="autre_retenue">@lang('Autres Retenues')</label>
-                                <input type="number" class="form-control" value="{{ $data->autre_retenue }}" name="autre_retenue" min="0" required>
+                                <input type="number" class="form-control" value="{{ $data->autre_retenue }}" name="autre_retenue" min="0" step="any" required>
                             </div>
                         </div>
                     </div>
@@ -149,13 +149,13 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="soins_medicaux">@lang('Soins Medicaux')</label>
-                                <input type="number" class="form-control" name="soins_medicaux" value="{{ $data->soins_medicaux }}" min="0" required>
+                                <input type="number" class="form-control" name="soins_medicaux" value="{{ $data->soins_medicaux }}" min="0" step="any" required>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="allocation_familiale">@lang('Allocations Familiales')</label>
-                                <input type="number" class="form-control" value="{{ $data->allocation_familiale }}" name="allocation_familiale" min="0" required>
+                                <input type="number" class="form-control" value="{{ $data->allocation_familiale }}" name="allocation_familiale" min="0" step="any" required>
                             </div>
                         </div>
                     </div>

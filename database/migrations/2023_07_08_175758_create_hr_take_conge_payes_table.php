@@ -56,8 +56,6 @@ class CreateHrTakeCongePayesTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::dropIfExists('hr_take_conge_payes');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

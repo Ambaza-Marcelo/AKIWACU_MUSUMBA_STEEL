@@ -58,7 +58,8 @@
                                     <label for="unit">@lang('messages.unit')<strong style="color: red;">*</strong></label>
                                     <select class="form-control" name="unit" id="unit">
                                         <option disabled="disabled" selected="selected">Merci de choisir</option>
-                                        <option value="pieces" class="form-control">Pieces</option>
+                                        <option value="PCS" class="form-control">PCS</option>
+                                        <option value="SACS" class="form-control">SACS</option>
                                         <option value="autres" class="form-control">Autres</option>
                                     </select>
                                 </div>
